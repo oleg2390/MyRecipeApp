@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
+    android:background="@color/grey_color"
     tools:context=".MainActivity">
 
     <TextView
@@ -30,25 +30,26 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/category"
+            android:id="@+id/btnCategory"
             style="@style/StyleNavButton"
             android:layout_width="@dimen/dimens_0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimens_8dp"
+            android:layout_marginEnd="@dimen/dimens_2dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/soft_blue"
-            android:text="@string/category" />
+            android:backgroundTint="@color/soft_blue_color"
+            android:text="@string/title_categories" />
 
         <Button
-            android:id="@+id/favourites"
+            android:id="@+id/btnFavourites"
             style="@style/StyleNavButton"
             android:layout_width="@dimen/dimens_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/red"
-            android:text="@string/favourites"
+            android:backgroundTint="@color/red_color"
+            android:text="@string/title_favourites"
+            android:layout_marginStart="@dimen/dimens_2dp"
             app:icon="@drawable/ic_heart_empty"
-            app:iconGravity="end" />
+            app:iconGravity="textEnd" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
