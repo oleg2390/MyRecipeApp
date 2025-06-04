@@ -5,9 +5,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import com.example.myrecipeapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -27,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            val fragment = supportFragmentManager
+            supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.mainContainer, CategoriesListFragment())
                 .commit()
