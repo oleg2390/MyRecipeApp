@@ -29,5 +29,19 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.mainContainer, CategoriesListFragment())
                 .commit()
         }
+
+        binding.btnCategory.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.mainContainer, CategoriesListFragment())
+                .commit()
+        }
+
+        binding.btnFavourites.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.mainContainer, FavoritesFragment())
+                .commit()
+        }
     }
 }
