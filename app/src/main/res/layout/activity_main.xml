@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,16 +8,17 @@
     android:background="@color/grey_color"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mainContainer"
+        android:layout_width="@dimen/dimens_0dp"
+        android:layout_height="@dimen/dimens_0dp"
+        app:layout_constraintBottom_toTopOf="@id/llNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/llNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimens_8dp"
@@ -44,10 +44,10 @@
             style="@style/StyleNavButton"
             android:layout_width="@dimen/dimens_0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_2dp"
             android:layout_weight="1"
             android:backgroundTint="@color/red_color"
             android:text="@string/title_favourites"
-            android:layout_marginStart="@dimen/dimens_2dp"
             app:icon="@drawable/ic_heart_empty"
             app:iconGravity="textEnd" />
     </LinearLayout>

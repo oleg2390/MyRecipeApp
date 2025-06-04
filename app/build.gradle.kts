@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.example.myrecipeapp"
         minSdk = 28
-        this.targetSdk = 34
+        this.targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
