@@ -5,6 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.myrecipeapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +30,22 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(R.id.mainContainer, CategoriesListFragment())
                 .commit()
+        }
+
+        binding.btnCategory.setOnClickListener {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace<CategoriesListFragment>(R.id.mainContainer)
+                addToBackStack(null)
+            }
+        }
+
+        binding.btnFavourites.setOnClickListener {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace<FavoritesFragment>(R.id.mainContainer)
+                addToBackStack(null)
+            }
         }
     }
 }
