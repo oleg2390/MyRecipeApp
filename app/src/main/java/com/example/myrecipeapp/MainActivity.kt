@@ -26,10 +26,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.mainContainer, CategoriesListFragment())
-                .commit()
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace<CategoriesListFragment>(R.id.mainContainer)
+            }
         }
 
         binding.btnCategory.setOnClickListener {
