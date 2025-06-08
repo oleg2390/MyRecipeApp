@@ -5,4 +5,7 @@
     <color name="grey_color">#F4FAFF</color>
     <color name="red_color">#E13E3E</color>
     <color name="soft_blue_color">#525DC0</color>
+    <color name="color_grey_white">#F4FAFF</color>
+    <color name="color_text_title">#5F3678</color>
+    <color name="color_description_item_666666">#666666</color>
 </resources>
