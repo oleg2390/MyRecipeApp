@@ -19,31 +19,26 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/image_item"
             android:scaleType="centerCrop"
             android:src="@drawable/burger" />
 
         <TextView
             android:id="@+id/tvItemTittle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimens_8dp"
-            android:fontFamily="@font/montserrat_alternates_semi_bold"
+            style="@style/StyleItemTittle"
             android:text="@string/text_burgers"
             android:textAllCaps="true"
-            android:textColor="@color/color_text_title"
+            android:textColor="@color/text_title_color"
             android:textSize="@dimen/dimens_text_14sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvItemDescription"
+            style="@style/StyleItemDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimens_8dp"
-            android:layout_marginEnd="@dimen/dimens_8dp"
-            android:layout_marginBottom="@dimen/dimens_8dp"
-            android:fontFamily="@font/montserrat"
             android:text="@string/text_item_description"
-            android:textColor="@color/color_description_item_666666"
+            android:textColor="@color/description_item_666666_color"
             android:textSize="@dimen/dimens_text_12sp" />
 
     </LinearLayout>

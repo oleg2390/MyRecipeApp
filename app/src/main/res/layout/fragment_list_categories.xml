@@ -10,28 +10,28 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/ivHeader"
-            android:layout_width="0dp"
-            android:layout_height="224dp"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="@dimen/dimens_224dp"
+            android:contentDescription="@string/header_category"
             android:scaleType="centerCrop"
             android:src="@drawable/bcg_categories"
+            app:layout_constraintBottom_toTopOf="@id/rvCategories"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/StyleTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimens_16dp"
-            android:background="@drawable/rounded_background"
-            android:fontFamily="@font/montserrat_alternates_semi_bold"
             android:padding="@dimen/dimens_10dp"
             android:text="@string/title_categories"
             android:textAllCaps="true"
-            android:textColor="@color/color_text_title"
+            android:textColor="@color/text_title_color"
             android:textSize="@dimen/dimens_20sp"
             app:layout_constraintBottom_toBottomOf="@id/ivHeader"
             app:layout_constraintStart_toStartOf="@id/ivHeader" />
@@ -39,9 +39,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCategories"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/dimens_8dp"
+            android:layout_height="@dimen/dimens_0dp"
             android:layout_marginHorizontal="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_8dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

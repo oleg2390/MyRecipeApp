@@ -13,4 +13,24 @@
         <item name="cornerRadius">@dimen/dimens_8dp</item>
     </style>
 
+    <style name="StyleTitleTv">
+        <item name="android:layout_margin">@dimen/dimens_16dp</item>
+        <item name="android:background">@drawable/rounded_background</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+    </style>
+
+    <style name="StyleItemTittle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/dimens_8dp</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+    </style>
+
+    <style name="StyleItemDescription">
+        <item name="android:layout_marginStart">@dimen/dimens_8dp</item>
+        <item name="android:layout_marginEnd">@dimen/dimens_8dp</item>
+        <item name="android:layout_marginBottom">@dimen/dimens_8dp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
 </resources>
