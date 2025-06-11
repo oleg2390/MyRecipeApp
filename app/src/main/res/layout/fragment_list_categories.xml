@@ -26,13 +26,12 @@
 
         <TextView
             style="@style/Text.StyleTitle16"
+            android:layout_margin="@dimen/dimens_16dp"
+            android:background="@drawable/rounded_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/dimens_10dp"
             android:text="@string/title_categories"
-            android:textAllCaps="true"
-            android:textColor="@color/text_title_color"
-            android:textSize="@dimen/dimens_20sp"
             app:layout_constraintBottom_toBottomOf="@id/ivHeader"
             app:layout_constraintStart_toStartOf="@id/ivHeader" />
 
