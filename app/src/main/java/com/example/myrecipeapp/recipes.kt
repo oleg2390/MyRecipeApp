@@ -6,7 +6,7 @@ object STUB {
             id = 0,
             title = "Бургеры",
             description = "Рецепты всех популярных видов бургеров",
-            imageUrl = "burger.png"
+            imageUrl = "drawable/burger.png"
         ),
         Category(
             id = 1,
