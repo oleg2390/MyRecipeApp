@@ -1,6 +1,5 @@
 package com.example.myrecipeapp
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,16 +25,16 @@ class CategoriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val headerImage = binding.idHeader
-//        val inputStreamImage = requireContext().assets.open ("bcg_categories.png")
-//        val drawableImage = Drawable.createFromStream(inputStreamImage, null)
-//        headerImage.setImageDrawable(drawableImage)
-//
-//        val radius =
+        initRecycler()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initRecycler() {
+        val categoriesAdapter = CategoriesListAdapter(STUB.getCategory())
+        binding.rvCategories.adapter = categoriesAdapter
     }
 }

@@ -17,8 +17,9 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/ivItemImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimens_130dp"
             android:contentDescription="@string/image_item"
             android:scaleType="centerCrop"
             android:src="@drawable/burger" />

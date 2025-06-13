@@ -11,4 +11,5 @@
     <dimen name="dimens_text_12sp">12sp</dimen>
     <dimen name="dimens_224dp">224dp</dimen>
     <dimen name="dimens_4dp">4dp</dimen>
+    <dimen name="dimens_130dp">130dp</dimen>
 </resources>
