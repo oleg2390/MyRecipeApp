@@ -1,17 +1,20 @@
-package com.example.myrecipeapp
+package com.example.myrecipeapp.application
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
+import com.example.myrecipeapp.models.Category
 
 class CategoriesListFragment : Fragment() {
 
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
-        get() = _binding ?: throw IllegalStateException("FragmentListCategoriesBinding must not be null")
+        get() = _binding
+            ?: throw IllegalStateException("FragmentListCategoriesBinding must not be null")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +37,22 @@ class CategoriesListFragment : Fragment() {
     }
 
     private fun initRecycler() {
+
         val categoriesAdapter = CategoriesListAdapter(STUB.getCategory())
         binding.rvCategories.adapter = categoriesAdapter
+
+        categoriesAdapter.setOnItemClickListener(object :
+            CategoriesListAdapter.OnItemClickListener {
+            override fun onItemClick(category: Category) {
+                openRecipesByCategoryId()
+            }
+        })
+    }
+
+    private fun openRecipesByCategoryId() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mainContainer, RecipesListFragment())
+            .addToBackStack(null)
+            .commit()
     }
 }
