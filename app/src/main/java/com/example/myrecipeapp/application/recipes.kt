@@ -1,4 +1,6 @@
-package com.example.myrecipeapp
+package com.example.myrecipeapp.application
+
+import com.example.myrecipeapp.models.Category
 
 object STUB {
     private val categories: List<Category> = listOf(
@@ -25,6 +27,18 @@ object STUB {
             title = "Рыба",
             description = "Печеная, жареная, сушеная, любая рыба на твой вкус",
             imageUrl = "fish.png"
+        ),
+        Category(
+            id = 4,
+            title = "Супы",
+            description = "От классики до экзотики: мир в одной тарелке",
+            imageUrl = "soup.png"
+        ),
+        Category(
+            id = 5,
+            title = "Салаты",
+            description = "Хрустящий калейдоскоп под соусом вдохновения",
+            imageUrl = "salad.png"
         )
     )
 
