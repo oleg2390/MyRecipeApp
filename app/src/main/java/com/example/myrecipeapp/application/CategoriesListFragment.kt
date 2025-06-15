@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
 import com.example.myrecipeapp.models.Category
@@ -43,16 +45,37 @@ class CategoriesListFragment : Fragment() {
 
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick(category: Category) {
-                openRecipesByCategoryId()
+            override fun onItemClick(categoryId: Int) {
+                openRecipesByCategoryId(categoryId)
             }
         })
     }
 
-    private fun openRecipesByCategoryId() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.mainContainer, RecipesListFragment())
-            .addToBackStack(null)
-            .commit()
+    private fun openRecipesByCategoryId(categoryId: Int) {
+
+        val category = STUB.getCategory().find { it.id == categoryId }
+        val categoryName = category?.title ?: return
+        val categoryImageUrl = category.imageUrl
+
+        val bundle = Bundle().apply {
+            putInt(ARG_CATEGORY_ID, categoryId)
+            putString(ARG_CATEGORY_NAME, categoryName)
+            putString(ARG_CATEGORY_IMAGE_URL, categoryImageUrl)
+        }
+
+        val fragment = RecipesListFragment().apply {
+            arguments = bundle
+        }
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.mainContainer, fragment)
+            addToBackStack(null)
+        }
+    }
+
+    companion object {
+        const val ARG_CATEGORY_ID = "arg_category_id"
+        const val ARG_CATEGORY_NAME = "arg_category_name"
+        const val ARG_CATEGORY_IMAGE_URL = "arg_category_image_url"
     }
 }
