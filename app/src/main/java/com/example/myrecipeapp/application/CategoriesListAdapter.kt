@@ -1,15 +1,27 @@
-package com.example.myrecipeapp
+package com.example.myrecipeapp.application
 
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.ItemCategoryBinding
+import com.example.myrecipeapp.models.Category
 import java.io.IOException
 
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(category: Category)
+    }
+
+    private var itemClickListener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        itemClickListener = listener
+    }
 
     class ViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -47,6 +59,9 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
 
         val category = dataSet[position]
         holder.bind(category)
+        holder.itemView.setOnClickListener {
+            itemClickListener?.onItemClick(category)
+        }
     }
 
     override fun getItemCount() = dataSet.size
