@@ -1,21 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recipes_list_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_color"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvRecipesTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimens_20sp"
-        android:text="@string/title_recipes" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/recipesContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clHeaderRecipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivHeaderRecipe"
+            android:layout_width="@dimen/dimens_0dp"
+            android:scaleType="centerCrop"
+            android:layout_height="@dimen/dimens_224dp"
+            android:src="@drawable/bcg_recipes_list"
+            android:contentDescription="@string/header_recipe"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            style="@style/Text.StyleTitle16"
+            android:id="@+id/tvRecipes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimens_16dp"
+            android:background="@drawable/rounded_background"
+            android:padding="@dimen/dimens_10dp"
+            android:text="@string/title_burgers"
+            app:layout_constraintBottom_toBottomOf="@id/ivHeaderRecipe"
+            app:layout_constraintStart_toStartOf="@id/ivHeaderRecipe"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_recipe"/>
 
 </LinearLayout>

@@ -7,4 +7,6 @@
     <string name="header_category">заголовок категории</string>
     <string name="image_item">image_item</string>
     <string name="title_recipes">рецепты</string>
+    <string name="title_burgers">бургеры</string>
+    <string name="header_recipe">заголовок рецептов</string>
 </resources>

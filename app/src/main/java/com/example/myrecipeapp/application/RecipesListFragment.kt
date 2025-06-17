@@ -1,12 +1,21 @@
 package com.example.myrecipeapp.application
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myrecipeapp.ARG_CATEGORY_ID
+import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
+import com.example.myrecipeapp.ARG_CATEGORY_NAME
+import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.RecipesListFragmentBinding
+import java.io.IOException
 
 class RecipesListFragment : Fragment() {
 
@@ -31,16 +40,54 @@ class RecipesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            category_id = it.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            category_name = it.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            category_image_url = it.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+            category_id = it.getInt(ARG_CATEGORY_ID)
+            category_name = it.getString(ARG_CATEGORY_NAME)
+            category_image_url = it.getString(ARG_CATEGORY_IMAGE_URL)
         }
 
-        Log.d("data", "ID: $category_id, NAME: $category_name, IMAGE: $category_image_url")
+        binding.tvRecipes.text = category_name
+
+        try {
+            category_image_url?.let { fileName ->
+                val inputStream = requireContext().assets.open(fileName)
+                val bitMap = BitmapFactory.decodeStream(inputStream)
+                binding.ivHeaderRecipe.setImageBitmap(bitMap)
+                inputStream.close()
+            }
+        } catch (e: IOException) {
+            Log.e("imageError", "Error image recipe")
+        }
+
+        initRecyclerRecipe()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initRecyclerRecipe() {
+
+        category_id?.let { id ->
+            val recipeAdapter = RecipeListAdapter(STUB.getRecipesByCategoryId(id))
+            binding.rvRecipeContainer.layoutManager = LinearLayoutManager(requireContext())
+            binding.rvRecipeContainer.adapter = recipeAdapter
+
+            recipeAdapter.setOnItemClickListenerRecipe(object :
+            RecipeListAdapter.OnItemClickListener {
+                override fun onItemClick(recipeId: Int) {
+                    openRecipeByRecipeId(recipeId)
+                }
+            })
+        }
+    }
+
+    fun openRecipeByRecipeId(recipeId: Int) {
+
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace<RecipesFragment>(R.id.mainContainer)
+            addToBackStack(null)
+        }
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dimens_8dp"
+    android:layout_marginVertical="@dimen/dimens_8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/dimens_8dp"
+    app:cardElevation="@dimen/dimens_4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivRecipeItemImage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_130dp"
+            android:contentDescription="@string/image_item"
+            android:scaleType="centerCrop"
+            android:src="@drawable/burger" />
+
+        <TextView
+            android:id="@+id/tvRecipeItemTittle"
+            style="@style/Text.StyleItemTittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimens_8dp"
+            android:text="@string/text_burgers" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
