@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.myrecipeapp.ARG_CATEGORY_ID
+import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
+import com.example.myrecipeapp.ARG_CATEGORY_NAME
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
-import com.example.myrecipeapp.models.Category
 
 class CategoriesListFragment : Fragment() {
 
@@ -63,19 +65,10 @@ class CategoriesListFragment : Fragment() {
             putString(ARG_CATEGORY_IMAGE_URL, categoryImageUrl)
         }
 
-        val fragment = RecipesListFragment().apply {
-            arguments = bundle
-        }
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(R.id.mainContainer, fragment)
+            replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
         }
-    }
-
-    companion object {
-        const val ARG_CATEGORY_ID = "arg_category_id"
-        const val ARG_CATEGORY_NAME = "arg_category_name"
-        const val ARG_CATEGORY_IMAGE_URL = "arg_category_image_url"
     }
 }
