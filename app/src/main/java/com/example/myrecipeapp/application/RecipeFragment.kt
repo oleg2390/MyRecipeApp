@@ -1,0 +1,52 @@
+package com.example.myrecipeapp.application
+
+import android.os.Build
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.myrecipeapp.ARG_RECIPE
+import com.example.myrecipeapp.databinding.FragmentRecipesBinding
+import com.example.myrecipeapp.models.Recipe
+
+class RecipeFragment : Fragment() {
+
+    private var _binding: FragmentRecipesBinding? = null
+    private val binding
+        get() = _binding
+            ?: throw IllegalStateException("RecipeFragmentBinding must not be null")
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
+        } else {
+            @Suppress("DEPRECATED")
+            arguments?.getParcelable<Recipe>(ARG_RECIPE)
+        }
+
+        if (recipe != null) {
+            binding.tvRecipeFragmentTittle.text = recipe.title
+        } else {
+            Toast.makeText(requireContext(), "Рецепт не найден", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
