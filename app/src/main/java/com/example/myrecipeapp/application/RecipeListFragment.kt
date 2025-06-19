@@ -13,13 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_CATEGORY_ID
 import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
 import com.example.myrecipeapp.ARG_CATEGORY_NAME
+import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
-import com.example.myrecipeapp.databinding.RecipesListFragmentBinding
+import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
 import java.io.IOException
 
-class RecipesListFragment : Fragment() {
+class RecipeListFragment : Fragment() {
 
-    private var _binding: RecipesListFragmentBinding? = null
+    private var _binding: FragmentListRecipesBinding? = null
     private var category_id: Int? = null
     private var category_name: String? = null
     private var category_image_url: String? = null
@@ -32,7 +33,7 @@ class RecipesListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = RecipesListFragmentBinding.inflate(inflater, container, false)
+        _binding = FragmentListRecipesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -74,7 +75,7 @@ class RecipesListFragment : Fragment() {
             binding.rvRecipeContainer.adapter = recipeAdapter
 
             recipeAdapter.setOnItemClickListenerRecipe(object :
-            RecipeListAdapter.OnItemClickListener {
+                RecipeListAdapter.OnItemClickListener {
                 override fun onItemClick(recipeId: Int) {
                     openRecipeByRecipeId(recipeId)
                 }
@@ -84,9 +85,15 @@ class RecipesListFragment : Fragment() {
 
     fun openRecipeByRecipeId(recipeId: Int) {
 
+        val recipe = STUB.getRecipeById(recipeId)
+
+        val bundle = Bundle().apply {
+            putParcelable(ARG_RECIPE, recipe)
+        }
+
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            replace<RecipesFragment>(R.id.mainContainer)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
         }
     }
