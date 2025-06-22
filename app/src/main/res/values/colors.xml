@@ -8,4 +8,5 @@
     <color name="grey_white_color">#F4FAFF</color>
     <color name="text_title_color">#5F3678</color>
     <color name="description_item_666666_color">#666666</color>
+    <color name="line_item_color">#F5F5F5</color>
 </resources>

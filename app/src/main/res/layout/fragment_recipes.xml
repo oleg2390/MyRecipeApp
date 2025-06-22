@@ -1,18 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recipe_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/grey_color">
 
-    <TextView
-        android:id="@+id/tvRecipeFragmentTittle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RecipeFragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dimens_8dp">
+
+            <ImageView
+                android:id="@+id/ivHeaderRecipeFragment"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_224dp"
+                android:contentDescription="@string/header_recipe"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bcg_recipes_list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                style="@style/Text.StyleTitle16"
+                android:id="@+id/tvRecipeFragmentTittle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimens_16dp"
+                android:background="@drawable/rounded_background"
+                android:padding="@dimen/dimens_10dp"
+                android:text="@string/title_burgers"
+                app:layout_constraintBottom_toBottomOf="@id/ivHeaderRecipeFragment"
+                app:layout_constraintStart_toStartOf="@id/ivHeaderRecipeFragment"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            style="@style/Text.StyleTitle16"
+            android:text="@string/ingredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dimens_8dp"
+            android:paddingVertical="@dimen/dimens_8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_ingredient"
+            android:layout_marginVertical="@dimen/dimens_8dp"
+            android:layout_marginHorizontal="@dimen/dimens_8dp"
+            android:background="@drawable/rounded_background_rv" />
+
+        <TextView
+            style="@style/Text.StyleTitle16"
+            android:paddingHorizontal="@dimen/dimens_8dp"
+            android:paddingVertical="@dimen/dimens_8dp"
+            android:text="@string/cooking_method"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMethod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_rv"
+            android:layout_marginVertical="@dimen/dimens_8dp"
+            android:layout_marginHorizontal="@dimen/dimens_8dp"
+            tools:listitem="@layout/item_method"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

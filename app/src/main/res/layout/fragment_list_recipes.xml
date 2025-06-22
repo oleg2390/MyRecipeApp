@@ -19,7 +19,7 @@
             android:scaleType="centerCrop"
             android:layout_height="@dimen/dimens_224dp"
             android:src="@drawable/bcg_recipes_list"
-            android:contentDescription="@string/header_recipe"
+            android:contentDescription="@string/header_recipes"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
