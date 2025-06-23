@@ -1,7 +1,6 @@
 package com.example.myrecipeapp.application
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.databinding.ItemIngredientBinding
@@ -13,12 +12,9 @@ class IngredientsAdapter(private val ingredients: List<Ingredient>) :
     class ViewHolder(private val binding: ItemIngredientBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(ingredient: Ingredient, isLast: Boolean) {
+        fun bind(ingredient: Ingredient) {
             binding.tvItemIngredientDescription.text = ingredient.description.uppercase()
-            binding.tvItemIngredientQuantity.text = ingredient.quantity.uppercase()
-            binding.tvItemIngredientUnitOfMeasure.text = ingredient.unitOfMeasure.uppercase()
-
-            binding.mdLineIngredient.visibility = if (isLast) View.GONE else View.VISIBLE
+            binding.tvItemIngredientQuantity.text = "${ingredient.quantity.uppercase()} ${ingredient.unitOfMeasure.uppercase()}"
         }
     }
 
@@ -32,8 +28,7 @@ class IngredientsAdapter(private val ingredients: List<Ingredient>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val isLast = position == ingredients.lastIndex
-        holder.bind(ingredients[position], isLast)
+        holder.bind(ingredients[position])
     }
 
     override fun getItemCount() = ingredients.size

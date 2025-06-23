@@ -1,7 +1,6 @@
 package com.example.myrecipeapp.application
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.databinding.ItemMethodBinding
@@ -14,9 +13,6 @@ class MethodAdapter(private val method: List<String>) :
 
         fun bind(recipe: String, position: Int) {
             "${position + 1}. $recipe".also { binding.tvItemMethodRecipe.text = it }
-
-            binding.mdLineMethod.visibility =
-                if (position == recipe.lastIndex) View.GONE else View.VISIBLE
         }
     }
 

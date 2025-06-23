@@ -21,9 +21,9 @@ import java.io.IOException
 class RecipeListFragment : Fragment() {
 
     private var _binding: FragmentListRecipesBinding? = null
-    private var category_id: Int? = null
-    private var category_name: String? = null
-    private var category_image_url: String? = null
+    private var categoryId: Int? = null
+    private var categoryName: String? = null
+    private var categoryImageUrl: String? = null
     private val binding
         get() = _binding
             ?: throw IllegalStateException("RecipesListFragmentBinding must not be null")
@@ -41,15 +41,15 @@ class RecipeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            category_id = it.getInt(ARG_CATEGORY_ID)
-            category_name = it.getString(ARG_CATEGORY_NAME)
-            category_image_url = it.getString(ARG_CATEGORY_IMAGE_URL)
+            categoryId = it.getInt(ARG_CATEGORY_ID)
+            categoryName = it.getString(ARG_CATEGORY_NAME)
+            categoryImageUrl = it.getString(ARG_CATEGORY_IMAGE_URL)
         }
 
-        binding.tvRecipes.text = category_name
+        binding.tvRecipes.text = categoryName
 
         try {
-            category_image_url?.let { fileName ->
+            categoryImageUrl?.let { fileName ->
                 val inputStream = requireContext().assets.open(fileName)
                 val bitMap = BitmapFactory.decodeStream(inputStream)
                 binding.ivHeaderRecipe.setImageBitmap(bitMap)
@@ -69,7 +69,7 @@ class RecipeListFragment : Fragment() {
 
     private fun initRecyclerRecipe() {
 
-        category_id?.let { id ->
+        categoryId?.let { id ->
             val recipeAdapter = RecipeListAdapter(STUB.getRecipesByCategoryId(id))
             binding.rvRecipeContainer.layoutManager = LinearLayoutManager(requireContext())
             binding.rvRecipeContainer.adapter = recipeAdapter

@@ -10,12 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.TEXT_RECIPE_ERROR
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.example.myrecipeapp.models.Recipe
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import java.io.IOException
 
 class RecipeFragment : Fragment() {
@@ -42,32 +46,11 @@ class RecipeFragment : Fragment() {
             arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         } else {
             @Suppress("DEPRECATED")
-            arguments?.getParcelable<Recipe>(ARG_RECIPE)
-        }
-
-        if (recipe != null) {
-            binding.tvRecipeFragmentTittle.text = recipe.title
-
-            try {
-                val assetManager = binding.root.context.assets
-
-                assetManager.open(recipe.imageUrl).use { inputStream ->
-                    val drawable = Drawable.createFromStream(inputStream, null)
-                    binding.ivHeaderRecipeFragment.setImageDrawable(drawable)
-                }
-
-            } catch (e: IOException) {
-                Log.e("image", "image upload error from assets", e)
-                binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
-            }
-
-        } else {
-            Toast.makeText(requireContext(), "Рецепт не найден", Toast.LENGTH_SHORT).show()
-            parentFragmentManager.popBackStack()
+            arguments?.getParcelable(ARG_RECIPE)
         }
 
         initRecyclerRecipe()
-        initUI()
+        initUI(recipe)
     }
 
     override fun onDestroyView() {
@@ -80,15 +63,47 @@ class RecipeFragment : Fragment() {
 
         val recipe = arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         val ingredientAdapter = recipe?.let { IngredientsAdapter(it.ingredients) }
-        binding.rvIngredients.adapter = ingredientAdapter
-        binding.rvIngredients.layoutManager = LinearLayoutManager(requireContext())
+        val methodAdapter = recipe?.let { MethodAdapter(it.method) }
+        val recyclerViewIngredient = binding.rvIngredients
+        val recyclerViewMethod = binding.rvMethod
+        val divider = MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+            isLastItemDecorated = false
+            dividerColor = ContextCompat.getColor(requireContext(), R.color.line_item_color)
+            dividerThickness = resources.getDimensionPixelSize(R.dimen.dimens_1dp)
+            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_8dp)
+            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_8dp)
+        }
+
+        recyclerViewIngredient.adapter = ingredientAdapter
+        recyclerViewIngredient.layoutManager = LinearLayoutManager(requireContext())
+        recyclerViewMethod.adapter = methodAdapter
+        recyclerViewMethod.layoutManager = LinearLayoutManager(requireContext())
+
+        recyclerViewIngredient.addItemDecoration(divider)
+        recyclerViewMethod.addItemDecoration(divider)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun initUI() {
-        val method = arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
-        val methodAdapter = method?.let { MethodAdapter(it.method) }
-        binding.rvMethod.adapter = methodAdapter
-        binding.rvMethod.layoutManager = LinearLayoutManager(requireContext())
+    fun initUI(recipe: Recipe?) {
+
+        if (recipe != null) {
+            binding.tvRecipeFragmentTittle.text = recipe.title
+
+            try {
+                val assetManager = binding.root.context.assets
+                assetManager.open(recipe.imageUrl).use { inputStream ->
+                    val drawable = Drawable.createFromStream(inputStream, null)
+                    binding.ivHeaderRecipeFragment.setImageDrawable(drawable)
+                }
+
+            } catch (e: IOException) {
+                Log.e("image", "image upload error from assets", e)
+                binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
+            }
+
+        } else {
+            Toast.makeText(requireContext(), TEXT_RECIPE_ERROR, Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+        }
     }
 }
