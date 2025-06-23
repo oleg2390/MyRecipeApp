@@ -1,6 +1,5 @@
 package com.example.myrecipeapp.application
 
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.TEXT_RECIPE_ERROR
