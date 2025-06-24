@@ -15,4 +15,5 @@
     <string name="default_string_name">творог</string>
     <string name="ingredients">ингредиенты</string>
     <string name="cooking_method">способ приготовления</string>
+    <string name="fragment_favorites">fragment_favorites</string>
 </resources>

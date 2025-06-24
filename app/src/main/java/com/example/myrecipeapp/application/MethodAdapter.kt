@@ -12,7 +12,7 @@ class MethodAdapter(private val method: List<String>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(recipe: String, position: Int) {
-            "${position + 1}. $recipe".also { binding.tvItemMethodRecipe.text = it }
+            binding.tvItemMethodRecipe.text = "${position + 1}. $recipe"
         }
     }
 

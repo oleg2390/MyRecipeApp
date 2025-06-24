@@ -56,14 +56,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/item_ingredient"
-            android:layout_marginVertical="@dimen/dimens_8dp"
-            android:layout_marginHorizontal="@dimen/dimens_8dp"
+            android:layout_margin="@dimen/dimens_12dp"
+            android:paddingVertical="@dimen/dimens_4dp"
             android:background="@drawable/rounded_background_rv" />
 
         <TextView
             style="@style/Text.StyleTitle16"
-            android:paddingHorizontal="@dimen/dimens_8dp"
-            android:paddingVertical="@dimen/dimens_8dp"
+            android:padding="@dimen/dimens_8dp"
             android:text="@string/cooking_method"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -72,9 +71,9 @@
             android:id="@+id/rvMethod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/dimens_4dp"
             android:background="@drawable/rounded_background_rv"
-            android:layout_marginVertical="@dimen/dimens_8dp"
-            android:layout_marginHorizontal="@dimen/dimens_8dp"
+            android:layout_margin="@dimen/dimens_12dp"
             tools:listitem="@layout/item_method"/>
 
     </LinearLayout>

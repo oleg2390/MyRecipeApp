@@ -68,8 +68,8 @@ class RecipeFragment : Fragment() {
             isLastItemDecorated = false
             dividerColor = ContextCompat.getColor(requireContext(), R.color.line_item_color)
             dividerThickness = resources.getDimensionPixelSize(R.dimen.dimens_1dp)
-            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_8dp)
-            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_8dp)
+            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
+            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
         }
 
         recyclerViewIngredient.adapter = ingredientAdapter

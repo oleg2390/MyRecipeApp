@@ -13,9 +13,10 @@ class IngredientsAdapter(private val ingredients: List<Ingredient>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ingredient: Ingredient) {
+
             binding.tvItemIngredientDescription.text = ingredient.description.uppercase()
-            "${ingredient.quantity.uppercase()} ${ingredient.unitOfMeasure.uppercase()}"
-                .also { binding.tvItemIngredientQuantity.text = it }
+            binding.tvItemIngredientQuantity.text =
+                "${ingredient.quantity.uppercase()} ${ingredient.unitOfMeasure.uppercase()}"
         }
     }
 
