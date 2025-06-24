@@ -34,4 +34,9 @@
         <item name="android:fontFamily">@font/montserrat</item>
     </style>
 
+    <style name="Text.StyleItem14" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/dimens_text_14sp</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+    </style>
+
 </resources>

@@ -8,5 +8,12 @@
     <string name="image_item">image_item</string>
     <string name="title_recipes">рецепты</string>
     <string name="title_burgers">бургеры</string>
-    <string name="header_recipe">заголовок рецептов</string>
+    <string name="header_recipes">заголовок рецептов</string>
+    <string name="header_recipe">заголовок рецепта</string>
+    <string name="default_string_quantity">6</string>
+    <string name="default_string_unit_of_measure">г</string>
+    <string name="default_string_name">творог</string>
+    <string name="ingredients">ингредиенты</string>
+    <string name="cooking_method">способ приготовления</string>
+    <string name="fragment_favorites">fragment_favorites</string>
 </resources>
