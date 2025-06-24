@@ -14,4 +14,6 @@
     <dimen name="dimens_130dp">130dp</dimen>
     <dimen name="dimens_1dp">1dp</dimen>
     <dimen name="dimens_12dp">12dp</dimen>
+    <dimen name="dimens_30dp">30dp</dimen>
+    <dimen name="dimens_328dp">328dp</dimen>
 </resources>

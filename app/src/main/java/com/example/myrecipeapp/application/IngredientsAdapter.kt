@@ -3,20 +3,31 @@ package com.example.myrecipeapp.application
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myrecipeapp.NUMBER_1
 import com.example.myrecipeapp.databinding.ItemIngredientBinding
 import com.example.myrecipeapp.models.Ingredient
 
 class IngredientsAdapter(private val ingredients: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
-    class ViewHolder(private val binding: ItemIngredientBinding) :
+    var quantity = 1
+
+    inner class ViewHolder(private val binding: ItemIngredientBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ingredient: Ingredient) {
 
+            val numeric = ingredient.quantity.toDouble()
+            val calculated = numeric * quantity
+            val displayQuantity = if (calculated == calculated.toInt().toDouble()) {
+                calculated.toInt().toString()
+            } else {
+                String.format("%.1f", calculated)
+            }
+
             binding.tvItemIngredientDescription.text = ingredient.description.uppercase()
             binding.tvItemIngredientQuantity.text =
-                "${ingredient.quantity.uppercase()} ${ingredient.unitOfMeasure.uppercase()}"
+                "${displayQuantity.uppercase()} ${ingredient.unitOfMeasure.uppercase()}"
         }
     }
 
@@ -34,4 +45,9 @@ class IngredientsAdapter(private val ingredients: List<Ingredient>) :
     }
 
     override fun getItemCount() = ingredients.size
+
+    fun updateIngredients(progress: Int) {
+        quantity = progress
+        notifyDataSetChanged()
+    }
 }
