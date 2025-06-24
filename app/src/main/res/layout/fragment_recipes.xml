@@ -71,7 +71,7 @@
             <TextView
                 android:id="@+id/tvRecipeFragmentPortionsNumber"
                 style="@style/Text.StyleTitle16"
-                android:text="3"
+                android:text="@string/number_3"
                 android:textSize="@dimen/dimens_16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
