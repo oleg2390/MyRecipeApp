@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
-import com.example.myrecipeapp.NUMBER_1
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.TEXT_RECIPE_ERROR
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
@@ -86,9 +85,8 @@ class RecipeFragment : Fragment() {
         binding.sbRecipeFragment.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val portionValue = progress + NUMBER_1
-                binding.tvRecipeFragmentPortionsNumber.text = portionValue.toString()
-                ingredientAdapter?.updateIngredients(portionValue)
+                binding.tvRecipeFragmentPortionsNumber.text = progress.toString()
+                ingredientAdapter?.updateIngredients(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}

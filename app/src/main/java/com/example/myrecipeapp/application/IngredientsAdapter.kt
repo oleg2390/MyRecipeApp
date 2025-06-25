@@ -3,9 +3,10 @@ package com.example.myrecipeapp.application
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myrecipeapp.NUMBER_1
 import com.example.myrecipeapp.databinding.ItemIngredientBinding
 import com.example.myrecipeapp.models.Ingredient
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class IngredientsAdapter(private val ingredients: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
@@ -17,12 +18,12 @@ class IngredientsAdapter(private val ingredients: List<Ingredient>) :
 
         fun bind(ingredient: Ingredient) {
 
-            val numeric = ingredient.quantity.toDouble()
-            val calculated = numeric * quantity
-            val displayQuantity = if (calculated == calculated.toInt().toDouble()) {
-                calculated.toInt().toString()
+            val numeric = BigDecimal(ingredient.quantity)
+            val calculated = numeric.multiply(BigDecimal(quantity))
+            val displayQuantity = if (calculated.stripTrailingZeros().scale() <= 0) {
+                calculated.toBigInteger().toString()
             } else {
-                String.format("%.1f", calculated)
+                calculated.setScale(1, RoundingMode.HALF_UP).toString()
             }
 
             binding.tvItemIngredientDescription.text = ingredient.description.uppercase()

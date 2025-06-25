@@ -5,4 +5,3 @@ const val ARG_CATEGORY_NAME = "arg_category_name"
 const val ARG_CATEGORY_IMAGE_URL = "arg_category_image_url"
 const val ARG_RECIPE = "arg_recipe"
 const val TEXT_RECIPE_ERROR = "Рецепт не найден"
-const val NUMBER_1 = 1
