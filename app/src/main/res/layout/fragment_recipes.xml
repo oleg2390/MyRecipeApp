@@ -62,6 +62,7 @@
             <TextView
                 style="@style/Text.StyleTitle16"
                 android:text="@string/portions"
+                android:textColor="@color/description_item_666666_color"
                 android:textSize="@dimen/dimens_16sp"
                 android:textAllCaps="false"
                 android:id="@+id/tvRecipeFragmentPortions"
@@ -71,6 +72,7 @@
             <TextView
                 android:id="@+id/tvRecipeFragmentPortionsNumber"
                 style="@style/Text.StyleTitle16"
+                android:textColor="@color/description_item_666666_color"
                 android:text="@string/number_1"
                 android:textSize="@dimen/dimens_16sp"
                 android:layout_width="wrap_content"
