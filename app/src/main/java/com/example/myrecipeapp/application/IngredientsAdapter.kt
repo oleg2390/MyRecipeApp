@@ -18,13 +18,12 @@ class IngredientsAdapter(private val ingredients: List<Ingredient>) :
 
         fun bind(ingredient: Ingredient) {
 
-            val numeric = BigDecimal(ingredient.quantity)
-            val calculated = numeric.multiply(BigDecimal(quantity))
-            val displayQuantity = if (calculated.stripTrailingZeros().scale() <= 0) {
-                calculated.toBigInteger().toString()
-            } else {
-                calculated.setScale(1, RoundingMode.HALF_UP).toString()
-            }
+            val displayQuantity = ingredient.quantity
+                .toBigDecimal()
+                .multiply(quantity.toBigDecimal())
+                .setScale(1, RoundingMode.HALF_UP)
+                .stripTrailingZeros()
+                .toPlainString()
 
             binding.tvItemIngredientDescription.text = ingredient.description.uppercase()
             binding.tvItemIngredientQuantity.text =
