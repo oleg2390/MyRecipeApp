@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -47,7 +48,7 @@ class RecipeFragment : Fragment() {
             arguments?.getParcelable(ARG_RECIPE)
         }
 
-        initRecyclerRecipe()
+        initRecycler()
         initUI(recipe)
     }
 
@@ -57,20 +58,21 @@ class RecipeFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun initRecyclerRecipe() {
+    private fun initRecycler() {
 
         val recipe = arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         val ingredientAdapter = recipe?.let { IngredientsAdapter(it.ingredients) }
         val methodAdapter = recipe?.let { MethodAdapter(it.method) }
         val recyclerViewIngredient = binding.rvIngredients
         val recyclerViewMethod = binding.rvMethod
-        val divider = MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
-            isLastItemDecorated = false
-            dividerColor = ContextCompat.getColor(requireContext(), R.color.line_item_color)
-            dividerThickness = resources.getDimensionPixelSize(R.dimen.dimens_1dp)
-            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
-            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
-        }
+        val divider =
+            MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+                isLastItemDecorated = false
+                dividerColor = ContextCompat.getColor(requireContext(), R.color.line_item_color)
+                dividerThickness = resources.getDimensionPixelSize(R.dimen.dimens_1dp)
+                dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
+                dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
+            }
 
         recyclerViewIngredient.adapter = ingredientAdapter
         recyclerViewIngredient.layoutManager = LinearLayoutManager(requireContext())
@@ -79,6 +81,17 @@ class RecipeFragment : Fragment() {
 
         recyclerViewIngredient.addItemDecoration(divider)
         recyclerViewMethod.addItemDecoration(divider)
+
+        binding.sbRecipeFragment.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.tvRecipeFragmentPortionsNumber.text = progress.toString()
+                ingredientAdapter?.updateIngredients(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

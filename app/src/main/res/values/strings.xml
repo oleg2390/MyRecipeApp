@@ -16,4 +16,6 @@
     <string name="ingredients">ингредиенты</string>
     <string name="cooking_method">способ приготовления</string>
     <string name="fragment_favorites">fragment_favorites</string>
+    <string name="portions">Порции:</string>
+    <string name="number_1">1</string>
 </resources>
