@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -23,6 +24,7 @@ import java.io.IOException
 
 class RecipeFragment : Fragment() {
 
+    private var isFavorite = false
     private var _binding: FragmentRecipesBinding? = null
     private val binding
         get() = _binding
@@ -116,5 +118,25 @@ class RecipeFragment : Fragment() {
             Toast.makeText(requireContext(), TEXT_RECIPE_ERROR, Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
         }
+
+        val favoriteButton = binding.ibRecipeFragmentFavoriteButton
+        updateFavoriteIcon(favoriteButton)
+
+        binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
+            isFavorite = !isFavorite
+            updateFavoriteIcon(favoriteButton)
+
+            val massage = if (isFavorite) "Добавлено в избранное" else "Удаленно из избранного"
+            Toast.makeText(requireContext(), massage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun updateFavoriteIcon(button: ImageButton) {
+        val iconRes = if (isFavorite) {
+            R.drawable.ic_heart
+        } else {
+            R.drawable.ic_heart_empty
+        }
+        button.setImageResource(iconRes)
     }
 }
