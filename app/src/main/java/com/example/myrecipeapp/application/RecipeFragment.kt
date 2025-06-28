@@ -1,5 +1,6 @@
 package com.example.myrecipeapp.application
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -7,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
-import com.example.myrecipeapp.TEXT_RECIPE_ERROR
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.example.myrecipeapp.models.Recipe
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -24,7 +23,6 @@ import java.io.IOException
 
 class RecipeFragment : Fragment() {
 
-    private var isFavorite = false
     private var _binding: FragmentRecipesBinding? = null
     private val binding
         get() = _binding
@@ -99,44 +97,78 @@ class RecipeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun initUI(recipe: Recipe?) {
 
-        if (recipe != null) {
-            binding.tvRecipeFragmentTittle.text = recipe.title
-
-            try {
-                val assetManager = binding.root.context.assets
-                assetManager.open(recipe.imageUrl).use { inputStream ->
-                    val drawable = Drawable.createFromStream(inputStream, null)
-                    binding.ivHeaderRecipeFragment.setImageDrawable(drawable)
-                }
-
-            } catch (e: IOException) {
-                Log.e("image", "image upload error from assets", e)
-                binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
-            }
-
-        } else {
-            Toast.makeText(requireContext(), TEXT_RECIPE_ERROR, Toast.LENGTH_SHORT).show()
+        if (recipe == null) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.text_recipe_error), Toast.LENGTH_SHORT
+            ).show()
             parentFragmentManager.popBackStack()
+            return
         }
 
-        val favoriteButton = binding.ibRecipeFragmentFavoriteButton
-        updateFavoriteIcon(favoriteButton)
+        binding.tvRecipeFragmentTittle.text = recipe.title
+
+        try {
+            val assetManager = binding.root.context.assets
+            assetManager.open(recipe.imageUrl).use { inputStream ->
+                val drawable = Drawable.createFromStream(inputStream, null)
+                binding.ivHeaderRecipeFragment.setImageDrawable(drawable)
+            }
+        } catch (e: IOException) {
+            Log.e("image", getString(R.string.image_upload_error_from_assets), e)
+            binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
+        }
+
+        val recipeId = recipe.id.toString()
+        val isCurrentlyFavorite = recipeId in getFavorites()
+        updateFavoriteIcon(isCurrentlyFavorite)
 
         binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
-            isFavorite = !isFavorite
-            updateFavoriteIcon(favoriteButton)
+            val favorites = getFavorites()
+            val nowFavorites = if (recipeId in favorites) {
+                favorites.remove(recipeId)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.remove_favorite),
+                    Toast.LENGTH_SHORT
+                ).show()
+                false
+            } else {
+                favorites.add(recipeId)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.add_favorite),
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
 
-            val massage = if (isFavorite) "Добавлено в избранное" else "Удаленно из избранного"
-            Toast.makeText(requireContext(), massage, Toast.LENGTH_SHORT).show()
+            saveFavorites(favorites)
+            updateFavoriteIcon(nowFavorites)
         }
     }
 
-    fun updateFavoriteIcon(button: ImageButton) {
-        val iconRes = if (isFavorite) {
-            R.drawable.ic_heart
-        } else {
-            R.drawable.ic_heart_empty
-        }
-        button.setImageResource(iconRes)
+    private fun updateFavoriteIcon(favorite: Boolean) {
+        val iconRes = if (favorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
+        binding.ibRecipeFragmentFavoriteButton.setImageResource(iconRes)
+    }
+
+    private fun saveFavorites(favoriteId: Set<String>) {
+        val sharedPrefs = requireContext().getSharedPreferences(
+            getString(R.string.favorite),
+            Context.MODE_PRIVATE
+        )
+        sharedPrefs.edit()
+            .putStringSet(getString(R.string.favorite_recipe), favoriteId)
+            .apply()
+    }
+
+    private fun getFavorites(): MutableSet<String> {
+        val sharedPrefs = requireContext().getSharedPreferences(
+            getString(R.string.favorite),
+            Context.MODE_PRIVATE
+        )
+        val storedSet = sharedPrefs.getStringSet(getString(R.string.favorite_recipe), emptySet())
+        return HashSet(storedSet ?: emptySet())
     }
 }
