@@ -18,4 +18,5 @@
     <string name="fragment_favorites">fragment_favorites</string>
     <string name="portions">Порции:</string>
     <string name="number_1">1</string>
+    <string name="add_favorite_icon">addFaforiteIcon</string>
 </resources>

@@ -42,6 +42,20 @@
                 app:layout_constraintBottom_toBottomOf="@id/ivHeaderRecipeFragment"
                 app:layout_constraintStart_toStartOf="@id/ivHeaderRecipeFragment"/>
 
+            <ImageButton
+                android:contentDescription="@string/add_favorite_icon"
+                tools:src="@drawable/ic_heart"
+                android:id="@+id/ibRecipeFragmentFavoriteButton"
+                android:layout_width="@dimen/dimens_40dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:scaleType="centerCrop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="@dimen/dimens_16dp"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -102,10 +116,10 @@
 
         <TextView
             style="@style/Text.StyleTitle16"
-            android:padding="@dimen/dimens_8dp"
             android:text="@string/cooking_method"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_16dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMethod"
