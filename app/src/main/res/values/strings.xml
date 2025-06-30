@@ -26,4 +26,5 @@
     <string name="favorite_recipe">favorite_recipe</string>
     <string name="image_upload_error_from_assets">image upload error from assets</string>
     <string name="text_recipe_error">text recipe error</string>
+    <string name="empty_favorites">Вы еще не добавили ни одного рецепта в избранное</string>
 </resources>

@@ -43,7 +43,17 @@ class FavoritesFragment() : Fragment() {
     private fun initRecycle() {
 
         val favoritesId: Set<Int> = getFavorites()
-        val adapter = RecipeListAdapter(STUB.getRecipesByIds(favoritesId))
+        val favoriteRecipes = STUB.getRecipesByIds(favoritesId)
+
+        if (favoriteRecipes.isEmpty()) {
+            binding.rvFavoritesContainer.visibility = View.GONE
+            binding.tvFavoritesEmpty.visibility = View.VISIBLE
+        }else {
+            binding.rvFavoritesContainer.visibility = View.VISIBLE
+            binding.tvFavoritesEmpty.visibility = View.GONE
+        }
+
+        val adapter = RecipeListAdapter(favoriteRecipes)
         binding.rvFavoritesContainer.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFavoritesContainer.adapter = adapter
 

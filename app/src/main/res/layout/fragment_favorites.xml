@@ -39,6 +39,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        style="@style/Text.StyleTv16"
+        android:id="@+id/tvFavoritesEmpty"
+        android:text="@string/empty_favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/dimens_25dp"
+        android:layout_marginTop="@dimen/dimens_224dp"
+        android:layout_marginHorizontal="@dimen/dimens_8dp"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFavoritesContainer"
         android:layout_width="match_parent"

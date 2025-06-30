@@ -44,4 +44,10 @@
         <item name="android:progressDrawable">@drawable/shape_seekbar_progress</item>
     </style>
 
+    <style name="Text.StyleTv16" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/dimens_16sp</item>
+        <item name="fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/description_item_666666_color</item>
+    </style>
+
 </resources>
