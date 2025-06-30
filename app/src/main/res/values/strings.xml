@@ -22,6 +22,7 @@
     <string name="add_favorite">Добавлено в избранное</string>
     <string name="remove_favorite">Удаленно из избранного</string>
     <string name="favorite">favorite</string>
+    <string name="favorites">избранное</string>
     <string name="favorite_recipe">favorite_recipe</string>
     <string name="image_upload_error_from_assets">image upload error from assets</string>
     <string name="text_recipe_error">text recipe error</string>

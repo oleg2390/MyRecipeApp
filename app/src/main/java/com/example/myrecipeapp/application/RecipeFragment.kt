@@ -153,7 +153,7 @@ class RecipeFragment : Fragment() {
         binding.ibRecipeFragmentFavoriteButton.setImageResource(iconRes)
     }
 
-    private fun saveFavorites(favoriteId: Set<String>) {
+    fun saveFavorites(favoriteId: Set<String>) {
         val sharedPrefs = requireContext().getSharedPreferences(
             getString(R.string.favorite),
             Context.MODE_PRIVATE
@@ -163,7 +163,7 @@ class RecipeFragment : Fragment() {
             .apply()
     }
 
-    private fun getFavorites(): MutableSet<String> {
+    fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
             getString(R.string.favorite),
             Context.MODE_PRIVATE
