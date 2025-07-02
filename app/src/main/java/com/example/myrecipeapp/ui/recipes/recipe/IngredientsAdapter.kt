@@ -1,11 +1,10 @@
-package com.example.myrecipeapp.application
+package com.example.myrecipeapp.ui.recipes.recipe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.databinding.ItemIngredientBinding
-import com.example.myrecipeapp.models.Ingredient
-import java.math.BigDecimal
+import com.example.myrecipeapp.model.Ingredient
 import java.math.RoundingMode
 
 class IngredientsAdapter(private val ingredients: List<Ingredient>) :

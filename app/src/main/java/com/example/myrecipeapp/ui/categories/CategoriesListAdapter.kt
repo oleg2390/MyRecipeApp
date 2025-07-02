@@ -1,4 +1,4 @@
-package com.example.myrecipeapp.application
+package com.example.myrecipeapp.ui.categories
 
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.ItemCategoryBinding
-import com.example.myrecipeapp.models.Category
+import com.example.myrecipeapp.model.Category
 import java.io.IOException
 
 class CategoriesListAdapter(private val dataSet: List<Category>) :

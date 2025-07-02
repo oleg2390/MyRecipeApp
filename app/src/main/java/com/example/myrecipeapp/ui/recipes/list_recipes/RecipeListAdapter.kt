@@ -1,4 +1,4 @@
-package com.example.myrecipeapp.application
+package com.example.myrecipeapp.ui.recipes.list_recipes
 
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.ItemRecipeBinding
-import com.example.myrecipeapp.models.Recipe
+import com.example.myrecipeapp.model.Recipe
 import java.io.IOException
 
 class RecipeListAdapter(private val dataset: List<Recipe>) :

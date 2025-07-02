@@ -1,4 +1,4 @@
-package com.example.myrecipeapp.application
+package com.example.myrecipeapp.ui.recipes.list_recipes
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -16,6 +16,8 @@ import com.example.myrecipeapp.ARG_CATEGORY_NAME
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
+import com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment
+import com.example.myrecipeapp.data.STUB
 import java.io.IOException
 
 class RecipeListFragment : Fragment() {
