@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
@@ -23,6 +24,7 @@ import java.io.IOException
 
 class RecipeFragment : Fragment() {
 
+    private val viewModel: RecipeViewModel by viewModels()
     private var _binding: FragmentRecipesBinding? = null
     private val binding
         get() = _binding
@@ -40,6 +42,10 @@ class RecipeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            Log.i("!!!", "isFavorite: ${it.isFavorites}")
+        }
 
         val recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
