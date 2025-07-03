@@ -1,6 +1,5 @@
-package com.example.myrecipeapp.application
+package com.example.myrecipeapp.ui.recipes.recipe
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -16,8 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
-import com.example.myrecipeapp.models.Recipe
+import com.example.myrecipeapp.model.Recipe
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import java.io.IOException
 
@@ -119,20 +119,22 @@ class RecipeFragment : Fragment() {
             binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
         }
 
+        val appPreferences = AppPreferences(requireContext())
         val recipeId = recipe.id.toString()
-        val isCurrentlyFavorite = recipeId in getFavorites()
+        var isCurrentlyFavorite = recipeId in appPreferences.getFavorites()
         updateFavoriteIcon(isCurrentlyFavorite)
 
         binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
-            val favorites = getFavorites()
-            val nowFavorites = if (recipeId in favorites) {
+
+            val favorites = appPreferences.getFavorites().toMutableSet()
+            if (favorites.contains(recipeId)) {
                 favorites.remove(recipeId)
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.remove_favorite),
                     Toast.LENGTH_SHORT
                 ).show()
-                false
+                isCurrentlyFavorite = false
             } else {
                 favorites.add(recipeId)
                 Toast.makeText(
@@ -140,35 +142,16 @@ class RecipeFragment : Fragment() {
                     getString(R.string.add_favorite),
                     Toast.LENGTH_SHORT
                 ).show()
-                true
+                isCurrentlyFavorite = true
             }
 
-            saveFavorites(favorites)
-            updateFavoriteIcon(nowFavorites)
+            appPreferences.saveFavorites(favorites)
+            updateFavoriteIcon(isCurrentlyFavorite)
         }
     }
 
     private fun updateFavoriteIcon(favorite: Boolean) {
         val iconRes = if (favorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
         binding.ibRecipeFragmentFavoriteButton.setImageResource(iconRes)
-    }
-
-    fun saveFavorites(favoriteId: Set<String>) {
-        val sharedPrefs = requireContext().getSharedPreferences(
-            getString(R.string.favorite),
-            Context.MODE_PRIVATE
-        )
-        sharedPrefs.edit()
-            .putStringSet(getString(R.string.favorite_recipe), favoriteId)
-            .apply()
-    }
-
-    fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = requireContext().getSharedPreferences(
-            getString(R.string.favorite),
-            Context.MODE_PRIVATE
-        )
-        val storedSet = sharedPrefs.getStringSet(getString(R.string.favorite_recipe), emptySet())
-        return HashSet(storedSet ?: emptySet())
     }
 }

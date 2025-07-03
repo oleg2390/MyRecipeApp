@@ -1,6 +1,5 @@
-package com.example.myrecipeapp
+package com.example.myrecipeapp.ui.recipes.favorite
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myrecipeapp.application.RecipeFragment
-import com.example.myrecipeapp.application.RecipeListAdapter
-import com.example.myrecipeapp.application.STUB
+import com.example.myrecipeapp.ARG_RECIPE
+import com.example.myrecipeapp.R
+import com.example.myrecipeapp.data.AppPreferences
+import com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment
+import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListAdapter
+import com.example.myrecipeapp.data.STUB
 import com.example.myrecipeapp.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment() : Fragment() {
@@ -42,13 +44,17 @@ class FavoritesFragment() : Fragment() {
 
     private fun initRecycle() {
 
-        val favoritesId: Set<Int> = getFavorites()
+        val appPreferences = AppPreferences(requireContext())
+        val favoritesId: Set<Int> = appPreferences
+            .getFavorites()
+            .mapNotNull { it.toIntOrNull() }
+            .toSet()
         val favoriteRecipes = STUB.getRecipesByIds(favoritesId)
 
         if (favoriteRecipes.isEmpty()) {
             binding.rvFavoritesContainer.visibility = View.GONE
             binding.tvFavoritesEmpty.visibility = View.VISIBLE
-        }else {
+        } else {
             binding.rvFavoritesContainer.visibility = View.VISIBLE
             binding.tvFavoritesEmpty.visibility = View.GONE
         }
@@ -76,17 +82,5 @@ class FavoritesFragment() : Fragment() {
             replace<RecipeFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
         }
-    }
-
-    private fun getFavorites(): Set<Int> {
-        val sharedPrefs = requireContext().getSharedPreferences(
-            getString(R.string.favorite),
-            Context.MODE_PRIVATE
-        )
-        val storedSet = sharedPrefs.getStringSet(getString(R.string.favorite_recipe), emptySet())
-        return storedSet
-            ?.mapNotNull { it.toIntOrNull() }
-            ?.toSet()
-            ?: emptySet()
     }
 }
