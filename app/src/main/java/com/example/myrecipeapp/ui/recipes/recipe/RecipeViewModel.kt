@@ -1,5 +1,6 @@
 package com.example.myrecipeapp.ui.recipes.recipe
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,4 +15,9 @@ data class RecipeUiState(
 class RecipeViewModel : ViewModel() {
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
+
+    init {
+        Log.i("!!!", "ViewModel создан")
+        _uiState.value = RecipeUiState(isFavorites = false)
+    }
 }
