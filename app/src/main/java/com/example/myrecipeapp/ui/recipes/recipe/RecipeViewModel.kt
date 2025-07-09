@@ -1,15 +1,14 @@
 package com.example.myrecipeapp.ui.recipes.recipe
 
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.data.STUB
 import com.example.myrecipeapp.model.Recipe
+import com.example.myrecipeapp.utils.Event
 
 data class RecipeUiState(
     val recipe: Recipe? = null,
@@ -18,12 +17,13 @@ data class RecipeUiState(
 )
 
 class RecipeViewModel(
-    application: Application,
     private val appPreferences: AppPreferences,
 
-    ) : AndroidViewModel(application) {
+    ) : ViewModel() {
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
+    private val _toastMessage = MutableLiveData<Event<Int>>()
+    val toastMessage : LiveData<Event<Int>> = _toastMessage
 
     init {
         Log.i("!!!", "ViewModel создан")
@@ -35,12 +35,14 @@ class RecipeViewModel(
 
         val recipe = STUB.getRecipeById(id)
         val isFavorites = appPreferences.getFavorites().contains(id.toString())
-        val current = _uiState.value ?: RecipeUiState()
-        _uiState.value = current.copy(
+        val current = uiState.value ?: RecipeUiState()
+        val newState = current.copy(
             recipe = recipe,
             isFavorites = isFavorites,
             portions = current.portions
         )
+
+        _uiState.value = newState
     }
 
     fun onFavoritesClicked() {
@@ -48,25 +50,16 @@ class RecipeViewModel(
         val current = _uiState.value ?: return
         val recipeId = current.recipe?.id.toString()
         val favorites = appPreferences.getFavorites().toMutableSet()
-        val isCurrentlyFavorite = if (favorites.contains(recipeId)) {
+        val (isFavoriteNow, toastResId) = if (favorites.contains(recipeId)) {
             favorites.remove(recipeId)
-            Toast.makeText(
-                getApplication(),
-                R.string.remove_favorite,
-                Toast.LENGTH_SHORT
-            ).show()
-            false
+            false to R.string.remove_favorite
         } else {
             favorites.add(recipeId)
-            Toast.makeText(
-                getApplication(),
-                R.string.add_favorite,
-                Toast.LENGTH_SHORT
-            ).show()
-            true
+            true to R.string.add_favorite
         }
 
         appPreferences.saveFavorites(favorites)
-        _uiState.value = current.copy(isFavorites = isCurrentlyFavorite)
+        _uiState.value = current.copy(isFavorites = isFavoriteNow)
+        _toastMessage.value = Event(toastResId)
     }
 }

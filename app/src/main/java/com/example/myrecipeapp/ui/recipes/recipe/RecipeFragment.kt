@@ -16,14 +16,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
+import com.example.myrecipeapp.utils.EventObserver
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import java.io.IOException
 
 class RecipeFragment : Fragment() {
 
     private val viewModel: RecipeViewModel by viewModels {
-        RecipeViewModelFactory(requireActivity().application)
+        RecipeViewModelFactory(AppPreferences(requireContext().applicationContext))
     }
     private var _binding: FragmentRecipesBinding? = null
     private val binding
@@ -79,6 +81,14 @@ class RecipeFragment : Fragment() {
 
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
                 viewModel.onFavoritesClicked()
+                viewModel.toastMessage.observe(viewLifecycleOwner, EventObserver { resId ->
+                    Toast.makeText(
+                        requireContext(),
+                        resId?.let { it1 ->
+                            getString(it1)
+                        }, Toast.LENGTH_SHORT
+                    ).show()
+                })
             }
 
             updateFavoriteIcon(state.isFavorites)
