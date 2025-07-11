@@ -102,7 +102,7 @@
             android:layout_marginBottom="@dimen/dimens_8dp"
             android:max="5"
             android:min="1"
-            android:progress="0"/>
+            android:progress="1"/>
 
 
         <androidx.recyclerview.widget.RecyclerView

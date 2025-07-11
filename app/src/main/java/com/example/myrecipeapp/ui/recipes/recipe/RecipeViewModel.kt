@@ -18,8 +18,7 @@ data class RecipeUiState(
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val context: Context = getApplication<Application>().applicationContext
-    private val appPreferences = AppPreferences(context)
+    private val appPreferences = AppPreferences(application.applicationContext)
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
 
@@ -43,7 +42,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onFavoritesClicked() {
 
-        val current = _uiState.value ?: return
+        val current = uiState.value ?: return
         val recipeId = current.recipe?.id.toString()
         val favorites = appPreferences.getFavorites().toMutableSet()
         val isNowFavorite = if (favorites.contains(recipeId)) {

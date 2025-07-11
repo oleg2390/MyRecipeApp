@@ -75,25 +75,6 @@ class RecipeFragment : Fragment() {
                 binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
             }
 
-            binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
-                viewModel.onFavoritesClicked()
-                viewModel.uiState.observe(viewLifecycleOwner) {
-                    if (it.isFavorites) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.add_favorite),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.remove_favorite),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-
             updateFavoriteIcon(state.isFavorites)
 
             binding.tvRecipeFragmentPortionsNumber.text = state.portions.toString()
@@ -136,6 +117,18 @@ class RecipeFragment : Fragment() {
                 override fun onStartTrackingTouch(p0: SeekBar?) {}
                 override fun onStopTrackingTouch(p0: SeekBar?) {}
             })
+
+            binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
+                viewModel.onFavoritesClicked()
+                val messageToast =
+                    getString(if (!state.isFavorites) R.string.add_favorite else R.string.remove_favorite)
+
+                Toast.makeText(
+                    requireContext(),
+                    messageToast,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
