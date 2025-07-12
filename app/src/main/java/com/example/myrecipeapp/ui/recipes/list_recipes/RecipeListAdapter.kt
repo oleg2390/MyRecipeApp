@@ -1,5 +1,6 @@
 package com.example.myrecipeapp.ui.recipes.list_recipes
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,18 +11,19 @@ import com.example.myrecipeapp.databinding.ItemRecipeBinding
 import com.example.myrecipeapp.model.Recipe
 import java.io.IOException
 
-class RecipeListAdapter(private val dataset: List<Recipe>) :
+class RecipeListAdapter(private var dataset: List<Recipe>) :
     RecyclerView.Adapter<RecipeListAdapter.ViewHolder>() {
 
-        interface OnItemClickListener {
-            fun onItemClick(recipeId: Int)
-        }
+    interface OnItemClickListener {
+        fun onItemClick(recipeId: Int)
+    }
 
-     private var itemClickListener: OnItemClickListener? = null
+    private var itemClickListener: OnItemClickListener? = null
 
     fun setOnItemClickListenerRecipe(listener: OnItemClickListener) {
         itemClickListener = listener
     }
+
     class ViewHolder(private val binding: ItemRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -61,5 +63,12 @@ class RecipeListAdapter(private val dataset: List<Recipe>) :
         holder.itemView.setOnClickListener {
             itemClickListener?.onItemClick(recipe.id)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateAdapter(newRecipes: List<Recipe>) {
+
+        dataset = newRecipes
+        notifyDataSetChanged()
     }
 }

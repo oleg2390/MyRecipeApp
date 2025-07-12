@@ -7,17 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
-import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment
 import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListAdapter
-import com.example.myrecipeapp.data.STUB
 import com.example.myrecipeapp.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment() : Fragment() {
 
+    private val viewModel: FavoritesViewModel by viewModels()
     private var _binding: FragmentFavoritesBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("FragmentFavoritesBinding must not be null")
@@ -34,7 +34,9 @@ class FavoritesFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecycle()
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            initRecycle(state)
+        }
     }
 
     override fun onDestroyView() {
@@ -42,39 +44,35 @@ class FavoritesFragment() : Fragment() {
         _binding = null
     }
 
-    private fun initRecycle() {
+    private fun initRecycle(state: FavoriteUiState) {
 
-        val appPreferences = AppPreferences(requireContext())
-        val favoritesId: Set<Int> = appPreferences
-            .getFavorites()
-            .mapNotNull { it.toIntOrNull() }
-            .toSet()
-        val favoriteRecipes = STUB.getRecipesByIds(favoritesId)
+        state.recipes.let { recipes ->
 
-        if (favoriteRecipes.isEmpty()) {
-            binding.rvFavoritesContainer.visibility = View.GONE
-            binding.tvFavoritesEmpty.visibility = View.VISIBLE
-        } else {
-            binding.rvFavoritesContainer.visibility = View.VISIBLE
-            binding.tvFavoritesEmpty.visibility = View.GONE
-        }
-
-        val adapter = RecipeListAdapter(favoriteRecipes)
-        binding.rvFavoritesContainer.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvFavoritesContainer.adapter = adapter
-
-        adapter.setOnItemClickListenerRecipe(object : RecipeListAdapter.OnItemClickListener {
-            override fun onItemClick(recipeId: Int) {
-                openRecipeByRecipeId(recipeId)
+            if (recipes.isEmpty()) {
+                binding.rvFavoritesContainer.visibility = View.GONE
+                binding.tvFavoritesEmpty.visibility = View.VISIBLE
+            } else {
+                binding.rvFavoritesContainer.visibility = View.VISIBLE
+                binding.tvFavoritesEmpty.visibility = View.GONE
             }
-        })
+
+            val adapter = RecipeListAdapter(recipes)
+            binding.rvFavoritesContainer.layoutManager = LinearLayoutManager(requireContext())
+            binding.rvFavoritesContainer.adapter = adapter
+
+            adapter.setOnItemClickListenerRecipe(object : RecipeListAdapter.OnItemClickListener {
+                override fun onItemClick(recipeId: Int) {
+                    openRecipeByRecipeId(recipeId)
+                }
+            })
+            adapter.updateAdapter(recipes)
+        }
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
 
-        val recipe = STUB.getRecipeById(recipeId)
         val bundle = Bundle().apply {
-            putParcelable(ARG_RECIPE, recipe)
+            putInt(ARG_RECIPE, recipeId)
         }
 
         parentFragmentManager.commit {

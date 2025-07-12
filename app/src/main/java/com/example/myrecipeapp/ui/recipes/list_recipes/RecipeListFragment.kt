@@ -87,10 +87,8 @@ class RecipeListFragment : Fragment() {
 
     fun openRecipeByRecipeId(recipeId: Int) {
 
-        val recipe = STUB.getRecipeById(recipeId)
-
         val bundle = Bundle().apply {
-            putParcelable(ARG_RECIPE, recipe)
+            putInt(ARG_RECIPE, recipeId)
         }
 
         parentFragmentManager.commit {
