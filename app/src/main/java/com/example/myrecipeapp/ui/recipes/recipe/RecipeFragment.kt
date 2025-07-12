@@ -1,9 +1,7 @@
 package com.example.myrecipeapp.ui.recipes.recipe
 
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +16,6 @@ import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import java.io.IOException
 
 class RecipeFragment : Fragment() {
 
@@ -64,14 +61,11 @@ class RecipeFragment : Fragment() {
 
         state.recipe?.let { recipe ->
             binding.tvRecipeFragmentTittle.text = recipe.title
-            try {
-                val assetManager = binding.root.context.assets
-                assetManager.open(recipe.imageUrl).use { inputStream ->
-                    val drawable = Drawable.createFromStream(inputStream, null)
-                    binding.ivHeaderRecipeFragment.setImageDrawable(drawable)
-                }
-            } catch (e: IOException) {
-                Log.e("image", getString(R.string.image_upload_error_from_assets), e)
+
+            val stateImage = state.recipeImage
+            if (stateImage != null) {
+                binding.ivHeaderRecipeFragment.setImageDrawable(stateImage)
+            } else {
                 binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
             }
 
@@ -100,6 +94,7 @@ class RecipeFragment : Fragment() {
                     dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
                     dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
                 }
+
             binding.rvIngredients.addItemDecoration(divider)
             binding.rvMethod.addItemDecoration(divider)
 
