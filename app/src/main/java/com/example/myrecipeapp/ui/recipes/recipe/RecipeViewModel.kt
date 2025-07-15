@@ -51,8 +51,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             isFavorites = isFavorites,
             portions = current.portions,
             recipeImage = drawable,
-
-            )
+        )
 
         _uiState.value = newState
     }
@@ -72,5 +71,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
         appPreferences.saveFavorites(favorites)
         _uiState.value = current.copy(isFavorites = isNowFavorite)
+    }
+
+    fun onPortionsChanged(newPortion: Int) {
+        val current = uiState.value ?: return
+        _uiState.value = current.copy(portions = newPortion)
     }
 }

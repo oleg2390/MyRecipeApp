@@ -45,6 +45,9 @@ class RecipeFragment : Fragment() {
             return
         }
 
+        binding.rvIngredients.addItemDecoration(getDivider())
+        binding.rvMethod.addItemDecoration(getDivider())
+
         viewModel.loadRecipe(recipeId)
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             initUI(state)
@@ -83,21 +86,6 @@ class RecipeFragment : Fragment() {
             binding.rvIngredients.adapter = ingredientsAdapter
             binding.rvIngredients.layoutManager = LinearLayoutManager(requireContext())
 
-            val divider =
-                MaterialDividerItemDecoration(
-                    requireContext(),
-                    LinearLayoutManager.VERTICAL
-                ).apply {
-                    isLastItemDecorated = false
-                    dividerColor = ContextCompat.getColor(requireContext(), R.color.line_item_color)
-                    dividerThickness = resources.getDimensionPixelSize(R.dimen.dimens_1dp)
-                    dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
-                    dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
-                }
-
-            binding.rvIngredients.addItemDecoration(divider)
-            binding.rvMethod.addItemDecoration(divider)
-
             binding.sbRecipeFragment.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
@@ -105,7 +93,9 @@ class RecipeFragment : Fragment() {
                     progress: Int,
                     fromUser: Boolean
                 ) {
-                    binding.tvRecipeFragmentPortionsNumber.text = progress.toString()
+                    if (fromUser) {
+                        viewModel.onPortionsChanged(progress)
+                    }
                     ingredientsAdapter.updateIngredients(progress)
                 }
 
@@ -130,5 +120,18 @@ class RecipeFragment : Fragment() {
     private fun updateFavoriteIcon(favorite: Boolean) {
         val iconRes = if (favorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
         binding.ibRecipeFragmentFavoriteButton.setImageResource(iconRes)
+    }
+
+    fun getDivider(): MaterialDividerItemDecoration {
+        return MaterialDividerItemDecoration(
+            requireContext(),
+            LinearLayoutManager.VERTICAL
+        ).apply {
+            isLastItemDecorated = false
+            dividerColor = ContextCompat.getColor(requireContext(), R.color.line_item_color)
+            dividerThickness = resources.getDimensionPixelSize(R.dimen.dimens_1dp)
+            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
+            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
+        }
     }
 }
