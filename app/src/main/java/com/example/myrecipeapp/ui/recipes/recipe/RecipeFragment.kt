@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -19,6 +20,8 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class RecipeFragment : Fragment() {
 
+    private lateinit var ingredientsAdapter: IngredientsAdapter
+    private lateinit var methodAdapter: MethodAdapter
     private val viewModel: RecipeViewModel by viewModels()
     private var _binding: FragmentRecipesBinding? = null
     private val binding
@@ -45,6 +48,13 @@ class RecipeFragment : Fragment() {
             return
         }
 
+        ingredientsAdapter = IngredientsAdapter()
+        methodAdapter = MethodAdapter()
+        binding.rvMethod.adapter = methodAdapter
+        binding.rvMethod.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvIngredients.adapter = ingredientsAdapter
+        binding.rvIngredients.layoutManager = LinearLayoutManager(requireContext())
+
         binding.rvIngredients.addItemDecoration(getDivider())
         binding.rvMethod.addItemDecoration(getDivider())
 
@@ -63,7 +73,15 @@ class RecipeFragment : Fragment() {
     fun initUI(state: RecipeUiState) {
 
         state.recipe?.let { recipe ->
+
             binding.tvRecipeFragmentTittle.text = recipe.title
+            binding.tvRecipeFragmentPortionsNumber.text = state.portions.toString()
+
+            ingredientsAdapter.ingredients = recipe.ingredients
+            ingredientsAdapter.updateIngredients(state.portions)
+
+            methodAdapter.method = recipe.method
+            methodAdapter.notifyDataSetChanged()
 
             val stateImage = state.recipeImage
             if (stateImage != null) {
@@ -74,33 +92,8 @@ class RecipeFragment : Fragment() {
 
             updateFavoriteIcon(state.isFavorites)
 
-            binding.tvRecipeFragmentPortionsNumber.text = state.portions.toString()
-
-            val ingredientsAdapter = IngredientsAdapter(recipe.ingredients).apply {
-                updateIngredients(state.portions)
-            }
-
-            val methodAdapter = MethodAdapter(recipe.method)
-            binding.rvMethod.adapter = methodAdapter
-            binding.rvMethod.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvIngredients.adapter = ingredientsAdapter
-            binding.rvIngredients.layoutManager = LinearLayoutManager(requireContext())
-
-            binding.sbRecipeFragment.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (fromUser) {
-                        viewModel.onPortionsChanged(progress)
-                    }
-                    ingredientsAdapter.updateIngredients(progress)
-                }
-
-                override fun onStartTrackingTouch(p0: SeekBar?) {}
-                override fun onStopTrackingTouch(p0: SeekBar?) {}
+            binding.sbRecipeFragment.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
+                viewModel.onPortionsChanged(progress)
             })
 
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
@@ -122,7 +115,7 @@ class RecipeFragment : Fragment() {
         binding.ibRecipeFragmentFavoriteButton.setImageResource(iconRes)
     }
 
-    fun getDivider(): MaterialDividerItemDecoration {
+    private fun getDivider(): MaterialDividerItemDecoration {
         return MaterialDividerItemDecoration(
             requireContext(),
             LinearLayoutManager.VERTICAL
@@ -134,4 +127,20 @@ class RecipeFragment : Fragment() {
             dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.dimens_12dp)
         }
     }
+}
+
+class PortionSeekBarListener(
+    val onChangeIngredients: (Int) -> Unit
+) : OnSeekBarChangeListener {
+    override fun onProgressChanged(
+        seekBar: SeekBar?,
+        progress: Int,
+        fromUser: Boolean
+    ) {
+
+        onChangeIngredients(progress)
+    }
+
+    override fun onStartTrackingTouch(p0: SeekBar?) {}
+    override fun onStopTrackingTouch(p0: SeekBar?) {}
 }
