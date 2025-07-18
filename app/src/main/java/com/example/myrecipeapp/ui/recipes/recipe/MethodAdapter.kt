@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.databinding.ItemMethodBinding
 
-class MethodAdapter(private val method: List<String>) :
+class MethodAdapter(var method: List<String> = emptyList()) :
     RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
 
     class ViewHolder(private val binding: ItemMethodBinding) :
