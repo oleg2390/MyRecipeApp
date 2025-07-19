@@ -10,7 +10,7 @@ object STUB {
             id = 0,
             title = "Бургеры",
             description = "Рецепты всех популярных видов бургеров",
-            imageUrl = "drawable/burger.png"
+            imageUrl = "burger.png"
         ),
         Category(
             id = 1,

@@ -81,7 +81,6 @@ class RecipeFragment : Fragment() {
             ingredientsAdapter.updateIngredients(state.portions)
 
             methodAdapter.method = recipe.method
-            methodAdapter.notifyDataSetChanged()
 
             val stateImage = state.recipeImage
             if (stateImage != null) {

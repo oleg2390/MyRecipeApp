@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.myrecipeapp.ARG_CATEGORY_ID
 import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
 import com.example.myrecipeapp.ARG_CATEGORY_NAME
@@ -17,6 +18,8 @@ import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListFragment
 
 class CategoriesListFragment : Fragment() {
 
+    private lateinit var categoriesListAdapter: CategoriesListAdapter
+    private val viewModel: CategoriesListViewModel by viewModels()
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
         get() = _binding
@@ -34,25 +37,23 @@ class CategoriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecycler()
-    }
+        categoriesListAdapter = CategoriesListAdapter()
+        binding.rvCategories.adapter = categoriesListAdapter
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            categoriesListAdapter.updateAdapter(state)
+        }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun initRecycler() {
-
-        val categoriesAdapter = CategoriesListAdapter(STUB.getCategory())
-        binding.rvCategories.adapter = categoriesAdapter
-
-        categoriesAdapter.setOnItemClickListener(object :
+        categoriesListAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {
                 openRecipesByCategoryId(categoryId)
             }
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
