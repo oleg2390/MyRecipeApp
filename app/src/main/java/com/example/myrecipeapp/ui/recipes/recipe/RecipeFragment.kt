@@ -95,16 +95,13 @@ class RecipeFragment : Fragment() {
                 viewModel.onPortionsChanged(progress)
             })
 
+            state.toastMessageResId?.let {
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+                viewModel.clearToastMessage()
+            }
+
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
                 viewModel.onFavoritesClicked()
-                val messageToast =
-                    getString(if (!state.isFavorites) R.string.add_favorite else R.string.remove_favorite)
-
-                Toast.makeText(
-                    requireContext(),
-                    messageToast,
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
     }
