@@ -88,7 +88,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun clearToastMessage() {
-        val current = _uiState.value ?: return
+        val current = uiState.value ?: return
         _uiState.value = current.copy(toastMessageResId = null)
     }
 }
