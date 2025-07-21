@@ -20,8 +20,8 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class RecipeFragment : Fragment() {
 
-    private lateinit var ingredientsAdapter: IngredientsAdapter
-    private lateinit var methodAdapter: MethodAdapter
+    private var ingredientsAdapter = IngredientsAdapter()
+    private var methodAdapter = MethodAdapter()
     private val viewModel: RecipeViewModel by viewModels()
     private var _binding: FragmentRecipesBinding? = null
     private val binding
@@ -48,8 +48,6 @@ class RecipeFragment : Fragment() {
             return
         }
 
-        ingredientsAdapter = IngredientsAdapter()
-        methodAdapter = MethodAdapter()
         binding.rvMethod.adapter = methodAdapter
         binding.rvMethod.layoutManager = LinearLayoutManager(requireContext())
         binding.rvIngredients.adapter = ingredientsAdapter
@@ -81,7 +79,6 @@ class RecipeFragment : Fragment() {
             ingredientsAdapter.updateIngredients(state.portions)
 
             methodAdapter.method = recipe.method
-            methodAdapter.notifyDataSetChanged()
 
             val stateImage = state.recipeImage
             if (stateImage != null) {
@@ -96,16 +93,13 @@ class RecipeFragment : Fragment() {
                 viewModel.onPortionsChanged(progress)
             })
 
+            state.toastMessageResId?.let {
+                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+                viewModel.clearToastMessage()
+            }
+
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
                 viewModel.onFavoritesClicked()
-                val messageToast =
-                    getString(if (!state.isFavorites) R.string.add_favorite else R.string.remove_favorite)
-
-                Toast.makeText(
-                    requireContext(),
-                    messageToast,
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
     }

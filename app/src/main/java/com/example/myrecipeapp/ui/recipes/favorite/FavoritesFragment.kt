@@ -17,6 +17,7 @@ import com.example.myrecipeapp.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment() : Fragment() {
 
+    private var recipeListAdapter = RecipeListAdapter()
     private val viewModel: FavoritesViewModel by viewModels()
     private var _binding: FragmentFavoritesBinding? = null
     private val binding
@@ -33,6 +34,16 @@ class FavoritesFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.rvFavoritesContainer.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvFavoritesContainer.adapter = recipeListAdapter
+
+        recipeListAdapter.setOnItemClickListenerRecipe(object :
+            RecipeListAdapter.OnItemClickListener {
+            override fun onItemClick(recipeId: Int) {
+                openRecipeByRecipeId(recipeId)
+            }
+        })
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             initRecycle(state)
@@ -56,16 +67,7 @@ class FavoritesFragment() : Fragment() {
                 binding.tvFavoritesEmpty.visibility = View.GONE
             }
 
-            val adapter = RecipeListAdapter(recipes)
-            binding.rvFavoritesContainer.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvFavoritesContainer.adapter = adapter
-
-            adapter.setOnItemClickListenerRecipe(object : RecipeListAdapter.OnItemClickListener {
-                override fun onItemClick(recipeId: Int) {
-                    openRecipeByRecipeId(recipeId)
-                }
-            })
-            adapter.updateAdapter(recipes)
+            recipeListAdapter.updateAdapter(recipes)
         }
     }
 

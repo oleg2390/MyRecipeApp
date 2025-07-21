@@ -17,6 +17,7 @@ data class RecipeUiState(
     val isFavorites: Boolean = false,
     val portions: Int = 1,
     val recipeImage: Drawable? = null,
+    val toastMessageResId: Int? = null,
 )
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -61,20 +62,33 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val current = uiState.value ?: return
         val recipeId = current.recipe?.id.toString()
         val favorites = appPreferences.getFavorites().toMutableSet()
-        val isNowFavorite = if (favorites.contains(recipeId)) {
+        val isNowFavorite: Boolean
+        val toastResId: Int
+
+        if (favorites.contains(recipeId)) {
             favorites.remove(recipeId)
-            false
+            isNowFavorite = false
+            toastResId = R.string.remove_favorite
         } else {
             favorites.add(recipeId)
-            true
+            isNowFavorite = true
+            toastResId = R.string.add_favorite
         }
 
         appPreferences.saveFavorites(favorites)
-        _uiState.value = current.copy(isFavorites = isNowFavorite)
+        _uiState.value = current.copy(
+            isFavorites = isNowFavorite,
+            toastMessageResId = toastResId,
+        )
     }
 
     fun onPortionsChanged(newPortion: Int) {
         val current = uiState.value ?: return
         _uiState.value = current.copy(portions = newPortion)
+    }
+
+    fun clearToastMessage() {
+        val current = uiState.value ?: return
+        _uiState.value = current.copy(toastMessageResId = null)
     }
 }

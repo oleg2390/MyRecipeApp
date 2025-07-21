@@ -1,17 +1,17 @@
 package com.example.myrecipeapp.ui.recipes.list_recipes
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.ItemRecipeBinding
 import com.example.myrecipeapp.model.Recipe
 import java.io.IOException
 
-class RecipeListAdapter(private var dataset: List<Recipe>) :
+class RecipeListAdapter(var dataset: List<Recipe> = emptyList()) :
     RecyclerView.Adapter<RecipeListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -65,10 +65,27 @@ class RecipeListAdapter(private var dataset: List<Recipe>) :
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateAdapter(newRecipes: List<Recipe>) {
 
+        val diffCallback = RecipeListDiffCallback(dataset, newRecipes)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         dataset = newRecipes
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+    }
+}
+
+class RecipeListDiffCallback(
+    private val oldList: List<Recipe>,
+    private val newList: List<Recipe>,
+) : DiffUtil.Callback() {
+    override fun getOldListSize() = oldList.size
+    override fun getNewListSize() = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
