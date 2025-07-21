@@ -13,6 +13,7 @@ import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
 import com.example.myrecipeapp.ARG_CATEGORY_NAME
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
+import com.example.myrecipeapp.model.Category
 import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListFragment
 
 class CategoriesListFragment : Fragment() {
@@ -35,10 +36,19 @@ class CategoriesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            categoriesListAdapter.updateAdapter(state.categories)
+
+            categoriesListAdapter.setOnItemClickListener(object :
+                CategoriesListAdapter.OnItemClickListener {
+                override fun onItemClick(categoryId: Int) {
+                    val category = state.categories.find { it.id == categoryId }
+                    openRecipesByCategoryId(category)
+                }
+            })
+        }
 
         initRecyclerView()
-        observeViewModel()
-        setListener()
     }
 
     override fun onDestroyView() {
@@ -46,16 +56,14 @@ class CategoriesListFragment : Fragment() {
         _binding = null
     }
 
-    private fun openRecipesByCategoryId(categoryId: Int) {
+    private fun openRecipesByCategoryId(category: Category?) {
 
-        val category = viewModel.state.value?.categories?.find { it.id == categoryId }
-        val categoryName = category?.title ?: return
-        val categoryImageUrl = category.imageUrl
+        if (category == null) return
 
         val bundle = Bundle().apply {
-            putInt(ARG_CATEGORY_ID, categoryId)
-            putString(ARG_CATEGORY_NAME, categoryName)
-            putString(ARG_CATEGORY_IMAGE_URL, categoryImageUrl)
+            putInt(ARG_CATEGORY_ID, category.id)
+            putString(ARG_CATEGORY_NAME, category.title)
+            putString(ARG_CATEGORY_IMAGE_URL, category.imageUrl)
         }
 
         parentFragmentManager.commit {
@@ -69,20 +77,5 @@ class CategoriesListFragment : Fragment() {
         categoriesListAdapter = CategoriesListAdapter()
         binding.rvCategories.adapter = categoriesListAdapter
 
-    }
-
-    private fun observeViewModel() {
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            categoriesListAdapter.updateAdapter(state.categories)
-        }
-    }
-
-    private fun setListener() {
-        categoriesListAdapter.setOnItemClickListener(object :
-            CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick(categoryId: Int) {
-                openRecipesByCategoryId(categoryId)
-            }
-        })
     }
 }
