@@ -13,7 +13,6 @@ import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
 import com.example.myrecipeapp.ARG_CATEGORY_NAME
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
-import com.example.myrecipeapp.data.STUB
 import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListFragment
 
 class CategoriesListFragment : Fragment() {
@@ -37,18 +36,9 @@ class CategoriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesListAdapter = CategoriesListAdapter()
-        binding.rvCategories.adapter = categoriesListAdapter
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            categoriesListAdapter.updateAdapter(state)
-        }
-
-        categoriesListAdapter.setOnItemClickListener(object :
-            CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick(categoryId: Int) {
-                openRecipesByCategoryId(categoryId)
-            }
-        })
+        initRecyclerView()
+        observeViewModel()
+        setListener()
     }
 
     override fun onDestroyView() {
@@ -58,7 +48,7 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
 
-        val category = STUB.getCategory().find { it.id == categoryId }
+        val category = viewModel.state.value?.categories?.find { it.id == categoryId }
         val categoryName = category?.title ?: return
         val categoryImageUrl = category.imageUrl
 
@@ -73,5 +63,26 @@ class CategoriesListFragment : Fragment() {
             replace<RecipeListFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
         }
+    }
+
+    private fun initRecyclerView() {
+        categoriesListAdapter = CategoriesListAdapter()
+        binding.rvCategories.adapter = categoriesListAdapter
+
+    }
+
+    private fun observeViewModel() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            categoriesListAdapter.updateAdapter(state.categories)
+        }
+    }
+
+    private fun setListener() {
+        categoriesListAdapter.setOnItemClickListener(object :
+            CategoriesListAdapter.OnItemClickListener {
+            override fun onItemClick(categoryId: Int) {
+                openRecipesByCategoryId(categoryId)
+            }
+        })
     }
 }
