@@ -47,5 +47,6 @@ class IngredientsAdapter(var ingredients: List<Ingredient> = emptyList()) :
 
     fun updateIngredients(progress: Int) {
         quantity = progress
+        notifyDataSetChanged()
     }
 }

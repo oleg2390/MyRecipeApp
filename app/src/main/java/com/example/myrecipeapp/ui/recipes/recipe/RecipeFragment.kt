@@ -20,8 +20,8 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class RecipeFragment : Fragment() {
 
-    private lateinit var ingredientsAdapter: IngredientsAdapter
-    private lateinit var methodAdapter: MethodAdapter
+    private var ingredientsAdapter = IngredientsAdapter()
+    private var methodAdapter = MethodAdapter()
     private val viewModel: RecipeViewModel by viewModels()
     private var _binding: FragmentRecipesBinding? = null
     private val binding
@@ -48,8 +48,6 @@ class RecipeFragment : Fragment() {
             return
         }
 
-        ingredientsAdapter = IngredientsAdapter()
-        methodAdapter = MethodAdapter()
         binding.rvMethod.adapter = methodAdapter
         binding.rvMethod.layoutManager = LinearLayoutManager(requireContext())
         binding.rvIngredients.adapter = ingredientsAdapter

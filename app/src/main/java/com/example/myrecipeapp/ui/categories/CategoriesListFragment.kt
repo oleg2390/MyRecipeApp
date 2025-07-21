@@ -18,7 +18,7 @@ import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListFragment
 
 class CategoriesListFragment : Fragment() {
 
-    private lateinit var categoriesListAdapter: CategoriesListAdapter
+    private var categoriesListAdapter = CategoriesListAdapter()
     private val viewModel: CategoriesListViewModel by viewModels()
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
@@ -36,6 +36,9 @@ class CategoriesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.rvCategories.adapter = categoriesListAdapter
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             categoriesListAdapter.updateAdapter(state.categories)
 
@@ -47,8 +50,6 @@ class CategoriesListFragment : Fragment() {
                 }
             })
         }
-
-        initRecyclerView()
     }
 
     override fun onDestroyView() {
@@ -71,11 +72,5 @@ class CategoriesListFragment : Fragment() {
             replace<RecipeListFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
         }
-    }
-
-    private fun initRecyclerView() {
-        categoriesListAdapter = CategoriesListAdapter()
-        binding.rvCategories.adapter = categoriesListAdapter
-
     }
 }

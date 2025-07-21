@@ -16,7 +16,7 @@ import com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment
 
 class RecipeListFragment : Fragment() {
 
-    private lateinit var recipeListAdapter: RecipeListAdapter
+    private var recipeListAdapter = RecipeListAdapter()
     private val viewModel: RecipeListViewModel by viewModels()
     private var _binding: FragmentListRecipesBinding? = null
 
@@ -36,7 +36,6 @@ class RecipeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recipeListAdapter = RecipeListAdapter()
         binding.rvRecipeContainer.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecipeContainer.adapter = recipeListAdapter
         recipeListAdapter.setOnItemClickListenerRecipe(object :
