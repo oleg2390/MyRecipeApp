@@ -5,14 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
-import com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment
 
 class RecipeListFragment : Fragment() {
 
@@ -63,10 +61,6 @@ class RecipeListFragment : Fragment() {
             putInt(ARG_RECIPE, recipeId)
         }
 
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
-            addToBackStack(null)
-        }
+        findNavController().navigate(R.id.action_recipeListFragment_to_recipeFragment, bundle)
     }
 }

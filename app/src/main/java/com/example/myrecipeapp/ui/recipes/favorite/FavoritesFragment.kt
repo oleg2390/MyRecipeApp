@@ -79,7 +79,7 @@ class FavoritesFragment() : Fragment() {
 
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
+            replace<RecipeFragment>(R.id.nav_host_fragment, args = bundle)
             addToBackStack(null)
         }
     }
