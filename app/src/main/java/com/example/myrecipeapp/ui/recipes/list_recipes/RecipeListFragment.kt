@@ -8,8 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myrecipeapp.ARG_RECIPE
-import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
 
 class RecipeListFragment : Fragment() {
@@ -57,10 +55,7 @@ class RecipeListFragment : Fragment() {
 
     fun openRecipeByRecipeId(recipeId: Int) {
 
-        val bundle = Bundle().apply {
-            putInt(ARG_RECIPE, recipeId)
-        }
-
-        findNavController().navigate(R.id.action_recipeListFragment_to_recipeFragment, bundle)
+        val action = RecipeListFragmentDirections.actionRecipeListFragmentToRecipeFragment(recipeId)
+        findNavController().navigate(action)
     }
 }

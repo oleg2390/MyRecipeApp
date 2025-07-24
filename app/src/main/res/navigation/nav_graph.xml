@@ -20,12 +20,23 @@
         android:id="@+id/favoritesFragment"
         android:name="com.example.myrecipeapp.ui.recipes.favorite.FavoritesFragment"
         android:label="FavoritesFragment"
-        tools:layout="@layout/fragment_favorites"/>
+        tools:layout="@layout/fragment_favorites">
+        <action
+            android:id="@+id/action_favoritesFragment_to_categoriesListFragment"
+            app:destination="@id/categoriesListFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment"
         android:label="RecipeFragment"
-        tools:layout="@layout/fragment_recipes"/>
+        tools:layout="@layout/fragment_recipes">
+        <argument
+            android:name="recipeId"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/recipeListFragment"
         android:name="com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListFragment"
