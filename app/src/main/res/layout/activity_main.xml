@@ -9,13 +9,16 @@
     tools:context=".MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mainContainer"
+        android:id="@+id/nav_host_fragment"
         android:layout_width="@dimen/dimens_0dp"
         android:layout_height="@dimen/dimens_0dp"
         app:layout_constraintBottom_toTopOf="@id/llNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"/>
 
     <LinearLayout
         android:id="@+id/llNavigation"

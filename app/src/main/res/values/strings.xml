@@ -27,4 +27,6 @@
     <string name="image_upload_error_from_assets">image upload error from assets</string>
     <string name="text_recipe_error">text recipe error</string>
     <string name="empty_favorites">Вы еще не добавили ни одного рецепта в избранное</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

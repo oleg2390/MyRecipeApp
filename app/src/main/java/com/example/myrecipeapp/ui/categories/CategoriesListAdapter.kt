@@ -11,20 +11,16 @@ import com.example.myrecipeapp.databinding.ItemCategoryBinding
 import com.example.myrecipeapp.model.Category
 import java.io.IOException
 
-class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
+class CategoriesListAdapter(
+    private var dataSet: List<Category> = emptyList(),
+    private val onItemClick: (Category) -> Unit
+) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
-    interface OnItemClickListener {
-        fun onItemClick(categoryId: Int)
-    }
-
-    private var itemClickListener: OnItemClickListener? = null
-
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        itemClickListener = listener
-    }
-
-    class ViewHolder(private val binding: ItemCategoryBinding) :
+    class ViewHolder(
+        private val binding: ItemCategoryBinding,
+        private val onItemClick: (Category) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(category: Category) {
@@ -42,6 +38,10 @@ class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
                 Log.e("image", "image upload error from assets", e)
                 binding.ivItemImage.setImageResource(R.drawable.burger)
             }
+
+            binding.root.setOnClickListener {
+                onItemClick(category)
+            }
         }
     }
 
@@ -51,16 +51,13 @@ class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
     ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCategoryBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val category = dataSet[position]
         holder.bind(category)
-        holder.itemView.setOnClickListener {
-            itemClickListener?.onItemClick(category.id)
-        }
     }
 
     override fun getItemCount() = dataSet.size

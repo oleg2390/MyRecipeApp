@@ -38,6 +38,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13"
+    }
 }
 
 dependencies {
@@ -47,7 +51,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.ui)
 }
