@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
@@ -38,10 +39,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
-    }
 }
 
 dependencies {
@@ -55,6 +52,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.ui)
 }

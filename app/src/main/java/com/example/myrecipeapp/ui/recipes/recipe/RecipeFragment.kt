@@ -12,8 +12,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myrecipeapp.ARG_RECIPE
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -41,12 +41,8 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recipeId = arguments?.getInt(ARG_RECIPE)
-        if (recipeId == null) {
-            Toast.makeText(requireContext(), R.string.text_recipe_error, Toast.LENGTH_SHORT).show()
-            parentFragmentManager.popBackStack()
-            return
-        }
+        val args: RecipeFragmentArgs by navArgs()
+        val categoryId = args.recipeId
 
         binding.rvMethod.adapter = methodAdapter
         binding.rvMethod.layoutManager = LinearLayoutManager(requireContext())
@@ -56,7 +52,7 @@ class RecipeFragment : Fragment() {
         binding.rvIngredients.addItemDecoration(getDivider())
         binding.rvMethod.addItemDecoration(getDivider())
 
-        viewModel.loadRecipe(recipeId)
+        viewModel.loadRecipe(categoryId)
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             initUI(state)
         }
