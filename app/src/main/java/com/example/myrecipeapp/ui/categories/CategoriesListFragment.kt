@@ -7,10 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.myrecipeapp.ARG_CATEGORY_ID
-import com.example.myrecipeapp.ARG_CATEGORY_IMAGE_URL
-import com.example.myrecipeapp.ARG_CATEGORY_NAME
-import com.example.myrecipeapp.R
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
 import com.example.myrecipeapp.model.Category
 
@@ -38,7 +34,7 @@ class CategoriesListFragment : Fragment() {
             openRecipesByCategoryId(category)
         }
         binding.rvCategories.adapter = adapter
-        viewModel.state.observe(viewLifecycleOwner) {state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             adapter.updateAdapter(state.categories)
         }
     }
@@ -50,12 +46,14 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(category: Category) {
 
-        val bundle = Bundle().apply {
-            putInt(ARG_CATEGORY_ID, category.id)
-            putString(ARG_CATEGORY_NAME, category.title)
-            putString(ARG_CATEGORY_IMAGE_URL, category.imageUrl)
-        }
+        val foundCategory = viewModel.state.value?.categories?.find { it.id == category.id }
+            ?: throw IllegalArgumentException("Category id = ${category.id} not found")
 
-        findNavController().navigate(R.id.action_categoriesListFragment_to_recipeListFragment, bundle)
+        val action =
+            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipeListFragment(
+                foundCategory
+            )
+
+        findNavController().navigate(action)
     }
 }
