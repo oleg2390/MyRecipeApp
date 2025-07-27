@@ -5,13 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myrecipeapp.ARG_RECIPE
-import com.example.myrecipeapp.R
-import com.example.myrecipeapp.ui.recipes.recipe.RecipeFragment
 import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListAdapter
 import com.example.myrecipeapp.databinding.FragmentFavoritesBinding
 
@@ -73,14 +69,8 @@ class FavoritesFragment() : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
 
-        val bundle = Bundle().apply {
-            putInt(ARG_RECIPE, recipeId)
-        }
-
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace<RecipeFragment>(R.id.nav_host_fragment, args = bundle)
-            addToBackStack(null)
-        }
+        val navController = findNavController()
+        val action = FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipeId)
+        navController.navigate(action)
     }
 }

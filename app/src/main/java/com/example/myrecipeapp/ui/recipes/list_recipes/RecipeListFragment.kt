@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
 
@@ -32,6 +33,10 @@ class RecipeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val args: RecipeListFragmentArgs by navArgs()
+        val category = args.category
+        viewModel.loadRecipeList(category)
+
         binding.rvRecipeContainer.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecipeContainer.adapter = recipeListAdapter
         recipeListAdapter.setOnItemClickListenerRecipe(object :
@@ -54,7 +59,6 @@ class RecipeListFragment : Fragment() {
     }
 
     fun openRecipeByRecipeId(recipeId: Int) {
-
         val action = RecipeListFragmentDirections.actionRecipeListFragmentToRecipeFragment(recipeId)
         findNavController().navigate(action)
     }
