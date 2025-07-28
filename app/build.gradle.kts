@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
@@ -53,4 +54,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.navigation.ui)
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }
