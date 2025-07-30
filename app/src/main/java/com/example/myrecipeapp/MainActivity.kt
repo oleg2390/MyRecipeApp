@@ -91,4 +91,9 @@ class MainActivity : AppCompatActivity() {
             findNavController(R.id.nav_host_fragment).navigate(R.id.favoritesFragment)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        threadPool.shutdown()
+    }
 }
