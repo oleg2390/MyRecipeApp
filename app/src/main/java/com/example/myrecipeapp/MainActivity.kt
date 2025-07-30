@@ -9,12 +9,16 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import com.example.myrecipeapp.databinding.ActivityMainBinding
 import com.example.myrecipeapp.model.Category
+import com.example.myrecipeapp.model.Recipe
 import kotlinx.serialization.json.Json
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +46,28 @@ class MainActivity : AppCompatActivity() {
 
                 val category: List<Category> = Json.decodeFromString(response)
                 Log.i("!!!", "Получено категорий: ${category.size}")
-                category.forEach {
-                    Log.i("!!!", "Категории - ${it.title}")
+
+                category.forEach { category ->
+                    threadPool.execute {
+                        try {
+                            val recipeUrl =
+                                URL("https://recipes.androidsprint.ru/api/recipes?ids=${category.id}")
+                            val connectionRecipeUrl =
+                                recipeUrl.openConnection() as HttpURLConnection
+                            connectionRecipeUrl.connect()
+
+                            val responseRecipe = connectionRecipeUrl.inputStream.bufferedReader()
+                                .use { it.readText() }
+                            val recipe: List<Recipe> = Json.decodeFromString(responseRecipe)
+                            Log.i("!!!", "Категория: ${category.title} - рецептов: ${recipe.size}")
+
+                        } catch (e: Exception) {
+                            Log.i(
+                                "!!!",
+                                "ошибка получения рецептов для категории ${category.title}: ${e.message}"
+                            )
+                        }
+                    }
                 }
 
             } catch (e: Exception) {
@@ -66,5 +90,10 @@ class MainActivity : AppCompatActivity() {
         binding.btnFavourites.setOnClickListener {
             findNavController(R.id.nav_host_fragment).navigate(R.id.favoritesFragment)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        threadPool.shutdown()
     }
 }
