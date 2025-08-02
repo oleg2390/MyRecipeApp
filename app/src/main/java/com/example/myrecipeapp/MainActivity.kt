@@ -20,7 +20,6 @@ import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
-
     private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
     private lateinit var binding: ActivityMainBinding
     private val json = Json { ignoreUnknownKeys = true }
