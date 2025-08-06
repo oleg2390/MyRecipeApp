@@ -1,4 +1,4 @@
-package com.example.myrecipeapp
+package com.example.myrecipeapp.data
 
 import android.util.Log
 import com.example.myrecipeapp.model.Category

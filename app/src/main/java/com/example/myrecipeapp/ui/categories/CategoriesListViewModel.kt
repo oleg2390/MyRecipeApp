@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myrecipeapp.RecipesRepository
+import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.model.Category
 import kotlinx.coroutines.launch
 

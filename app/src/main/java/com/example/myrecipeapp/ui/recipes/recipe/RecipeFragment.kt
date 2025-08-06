@@ -55,6 +55,8 @@ class RecipeFragment : Fragment() {
 
         viewModel.loadRecipe(categoryId)
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
+
+
             initUI(state)
         }
     }
@@ -66,6 +68,11 @@ class RecipeFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun initUI(state: RecipeUiState) {
+
+        state.toastMessageRecipeError?.let {
+            Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
+            viewModel.clearToastMessage()
+        }
 
         state.recipe?.let { recipe ->
 

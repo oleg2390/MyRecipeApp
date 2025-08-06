@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
-import com.example.myrecipeapp.RecipesRepository
+import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.model.Recipe
 import kotlinx.coroutines.launch
@@ -20,6 +20,7 @@ data class RecipeUiState(
     val portions: Int = 1,
     val recipeImage: Drawable? = null,
     val toastMessageResId: Int? = null,
+    val toastMessageRecipeError: Int? = null,
 )
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -36,12 +37,18 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(id: Int) {
         viewModelScope.launch {
             val recipe = repository.getRecipeById(id)
+
             val isFavorites = appPreferences.getFavorites().contains(id.toString())
             val current = uiState.value ?: RecipeUiState()
 
+            if (recipe == null) {
+                _uiState.value = current.copy(toastMessageRecipeError = R.string.errorToast)
+                return@launch
+            }
+
             val drawable = try {
                 val inputStream =
-                    recipe?.imageUrl?.let { getApplication<Application>().assets.open(it) }
+                    recipe.imageUrl.let { getApplication<Application>().assets.open(it) }
                 Drawable.createFromStream(inputStream, null)
             } catch (e: IOException) {
                 val errorMsg =
@@ -55,6 +62,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 isFavorites = isFavorites,
                 portions = current.portions,
                 recipeImage = drawable,
+                toastMessageResId = null,
             )
 
             _uiState.value = newState
