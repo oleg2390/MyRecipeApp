@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.myrecipeapp.R
+import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.model.Recipe
@@ -22,6 +24,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     val state: LiveData<FavoriteUiState> = _state
     private val appPreferences = AppPreferences(application.applicationContext)
     private val repository = RecipesRepository()
+    var toastMessage = SingleLiveEvent<Int>()
 
     init {
         loadFavorite()
@@ -36,17 +39,16 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
                 .toSet()
 
             val favoriteRecipes = repository.getRecipesByIds(favoritesId)
-            val newStateFavorite = if (favoriteRecipes != null) {
-                FavoriteUiState(
-                    recipes = favoriteRecipes,
-                    isEmpty = favoriteRecipes.isEmpty()
-                )
-            } else {
-                FavoriteUiState(
-                    recipes = emptyList(),
-                    isEmpty = true
-                )
+
+            if (favoriteRecipes == null) {
+                toastMessage.postValue(R.string.errorToast)
+                return@launch
             }
+
+            val newStateFavorite = FavoriteUiState(
+                recipes = favoriteRecipes,
+                isEmpty = favoriteRecipes.isEmpty()
+            )
 
             Log.i("!!!", "newStateFavorite - $newStateFavorite")
             _state.value = newStateFavorite

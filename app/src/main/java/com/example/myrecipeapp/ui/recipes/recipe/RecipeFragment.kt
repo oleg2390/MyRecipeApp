@@ -2,7 +2,6 @@ package com.example.myrecipeapp.ui.recipes.recipe
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,9 +53,12 @@ class RecipeFragment : Fragment() {
         binding.rvMethod.addItemDecoration(getDivider())
 
         viewModel.loadRecipe(categoryId)
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+            Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
+        }
+
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
-
-
             initUI(state)
         }
     }
@@ -68,11 +70,6 @@ class RecipeFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun initUI(state: RecipeUiState) {
-
-        state.toastMessageRecipeError?.let {
-            Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
-            viewModel.clearToastMessage()
-        }
 
         state.recipe?.let { recipe ->
 
@@ -96,11 +93,6 @@ class RecipeFragment : Fragment() {
             binding.sbRecipeFragment.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
                 viewModel.onPortionsChanged(progress)
             })
-
-            state.toastMessageResId?.let {
-                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
-                viewModel.clearToastMessage()
-            }
 
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
                 viewModel.onFavoritesClicked()

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.model.Recipe
@@ -19,8 +20,6 @@ data class RecipeUiState(
     val isFavorites: Boolean = false,
     val portions: Int = 1,
     val recipeImage: Drawable? = null,
-    val toastMessageResId: Int? = null,
-    val toastMessageRecipeError: Int? = null,
 )
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -29,6 +28,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
     private val repository = RecipesRepository()
+
+    var toastMessage = SingleLiveEvent<Int>()
 
     init {
         Log.i("!!!", "ViewModel создан")
@@ -42,7 +43,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             val current = uiState.value ?: RecipeUiState()
 
             if (recipe == null) {
-                _uiState.value = current.copy(toastMessageRecipeError = R.string.errorToast)
+                toastMessage.postValue(R.string.errorToast)
                 return@launch
             }
 
@@ -62,7 +63,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 isFavorites = isFavorites,
                 portions = current.portions,
                 recipeImage = drawable,
-                toastMessageResId = null,
             )
 
             _uiState.value = newState
@@ -88,19 +88,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         appPreferences.saveFavorites(favorites)
-        _uiState.value = current.copy(
-            isFavorites = isNowFavorite,
-            toastMessageResId = toastResId,
-        )
+        _uiState.value = current.copy(isFavorites = isNowFavorite)
+        toastMessage.setValue(toastResId)
     }
 
     fun onPortionsChanged(newPortion: Int) {
         val current = uiState.value ?: return
         _uiState.value = current.copy(portions = newPortion)
-    }
-
-    fun clearToastMessage() {
-        val current = uiState.value ?: return
-        _uiState.value = current.copy(toastMessageResId = null)
     }
 }

@@ -7,6 +7,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.myrecipeapp.R
+import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.model.Category
 import com.example.myrecipeapp.model.Recipe
@@ -25,10 +27,17 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
     val state: LiveData<RecipeListUiState> = _state
     private val context = application
     private val repository = RecipesRepository()
+    var toastMessage = SingleLiveEvent<Int>()
 
     fun loadRecipeList(category: Category) {
         viewModelScope.launch {
             val recipes = repository.getRecipesByCategoryId(category.id)
+
+            if (recipes == null) {
+                toastMessage.postValue(R.string.errorToast)
+                return@launch
+            }
+
             val drawable = try {
                 val inputStream = context.assets.open(category.imageUrl)
                 Drawable.createFromStream(inputStream, null)
