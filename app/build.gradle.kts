@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
-    alias(libs.plugins.kotlinx.serialization)
+    kotlin("plugin.serialization")
+   // alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
@@ -54,7 +55,15 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.navigation.ui)
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+   // implementation(libs.plugins.kotlinx.serialization)
+
+
+
+
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 }

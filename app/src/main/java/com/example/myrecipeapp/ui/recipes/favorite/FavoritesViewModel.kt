@@ -1,16 +1,19 @@
 package com.example.myrecipeapp.ui.recipes.favorite
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.myrecipeapp.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
-import com.example.myrecipeapp.data.STUB
 import com.example.myrecipeapp.model.Recipe
+import kotlinx.coroutines.launch
 
 data class FavoriteUiState(
     val recipes: List<Recipe> = emptyList(),
-    val isEmpty : Boolean = true,
+    val isEmpty: Boolean = true,
 )
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,6 +21,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private val _state = MutableLiveData<FavoriteUiState>()
     val state: LiveData<FavoriteUiState> = _state
     private val appPreferences = AppPreferences(application.applicationContext)
+    private val repository = RecipesRepository()
 
     init {
         loadFavorite()
@@ -25,19 +29,27 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun loadFavorite() {
 
-        val favoritesId: Set<Int> = appPreferences
-            .getFavorites()
-            .mapNotNull { it.toIntOrNull() }
-            .toSet()
+        viewModelScope.launch {
+            val favoritesId: Set<Int> = appPreferences
+                .getFavorites()
+                .mapNotNull { it.toIntOrNull() }
+                .toSet()
 
-        val favoriteRecipes = STUB.getRecipesByIds(favoritesId)
+            val favoriteRecipes = repository.getRecipesByIds(favoritesId)
+            val newStateFavorite = if (favoriteRecipes != null) {
+                FavoriteUiState(
+                    recipes = favoriteRecipes,
+                    isEmpty = favoriteRecipes.isEmpty()
+                )
+            } else {
+                FavoriteUiState(
+                    recipes = emptyList(),
+                    isEmpty = true
+                )
+            }
 
-        val currentFavorite = state.value ?: FavoriteUiState()
-        val newStateFavorite = currentFavorite.copy(
-            recipes = favoriteRecipes,
-            isEmpty = favoriteRecipes.isEmpty()
-        )
-
-        _state.value = newStateFavorite
+            Log.i("!!!", "newStateFavorite - $newStateFavorite")
+            _state.value = newStateFavorite
+        }
     }
 }

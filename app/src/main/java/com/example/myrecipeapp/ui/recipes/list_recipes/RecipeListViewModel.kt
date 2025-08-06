@@ -6,9 +6,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.myrecipeapp.data.STUB
+import androidx.lifecycle.viewModelScope
+import com.example.myrecipeapp.RecipesRepository
 import com.example.myrecipeapp.model.Category
 import com.example.myrecipeapp.model.Recipe
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 data class RecipeListUiState(
@@ -22,24 +24,25 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
     private val _state = MutableLiveData<RecipeListUiState>()
     val state: LiveData<RecipeListUiState> = _state
     private val context = application
+    private val repository = RecipesRepository()
 
     fun loadRecipeList(category: Category) {
+        viewModelScope.launch {
+            val recipes = repository.getRecipesByCategoryId(category.id)
+            val drawable = try {
+                val inputStream = context.assets.open(category.imageUrl)
+                Drawable.createFromStream(inputStream, null)
+            } catch (e: IOException) {
+                Log.e("imageError", "Error image recipe")
+                null
+            }
 
-        val recipes = STUB.getRecipesByCategoryId(category.id)
-
-        val drawable = try {
-            val inputStream = context.assets.open(category.imageUrl)
-            Drawable.createFromStream(inputStream, null)
-        } catch (e: IOException) {
-            Log.e("imageError", "Error image recipe")
-            null
+            _state.value = RecipeListUiState(
+                recipes = recipes ?: emptyList(),
+                categoryName = category.title,
+                categoryImage = drawable
+            )
         }
-
-        _state.value = RecipeListUiState(
-            recipes = recipes,
-            categoryName = category.title,
-            categoryImage = drawable
-        )
     }
 }
 
