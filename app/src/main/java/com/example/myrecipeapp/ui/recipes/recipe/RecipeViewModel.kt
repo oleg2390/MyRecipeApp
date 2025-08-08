@@ -6,13 +6,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.model.Recipe
-import kotlinx.coroutines.launch
 import java.io.IOException
 
 data class RecipeUiState(
@@ -36,15 +34,14 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun loadRecipe(id: Int) {
-        viewModelScope.launch {
-            val recipe = repository.getRecipeById(id)
 
-            val isFavorites = appPreferences.getFavorites().contains(id.toString())
-            val current = uiState.value ?: RecipeUiState()
+        val isFavorites = appPreferences.getFavorites().contains(id.toString())
+        val current = uiState.value ?: RecipeUiState()
 
+        repository.getRecipeById(id) { recipe ->
             if (recipe == null) {
                 toastMessage.postValue(R.string.errorToast)
-                return@launch
+                return@getRecipeById
             }
 
             val drawable = try {
@@ -65,7 +62,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 recipeImage = drawable,
             )
 
-            _uiState.value = newState
+            _uiState.postValue(newState)
         }
     }
 

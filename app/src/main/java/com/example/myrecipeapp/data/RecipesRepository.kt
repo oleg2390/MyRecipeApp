@@ -9,10 +9,13 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class RecipesRepository {
 
     private val api: RecipeApiService
+    private val threadPoll: ExecutorService = Executors.newFixedThreadPool(10)
 
     init {
 
@@ -35,49 +38,73 @@ class RecipesRepository {
         api = retrofit.create(RecipeApiService::class.java)
     }
 
-    suspend fun getCategories(): List<Category>? {
-
-        return try {
-            val result = api.getCategories()
-            Log.d("!!!", "Получены категории: $result")
-            result
-        } catch (e: Exception) {
-            Log.d("!!!", "getCategories exception", e)
-            null
+    fun getCategories(callback: (List<Category>?) -> Unit) {
+        threadPoll.execute {
+            val result = try {
+                val resultResponse = api.getCategories().execute().body()
+                Log.d("!!!", "Получены категории: $resultResponse")
+                resultResponse
+            } catch (e: Exception) {
+                Log.d("!!!", "getCategories exception", e)
+                null
+            }
+            callback(result)
         }
     }
 
-    suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? {
-        return try {
-            val response = api.getRecipesByCategoryId(categoryId)
-            Log.d("!!!", "getRecipesByCategoryId ($categoryId) failed: HTTP $response ")
-            response
-        } catch (e: Exception) {
-            Log.d("!!!", "getRecipesByCategoryId exception $categoryId", e)
-            null
+    fun getRecipesByCategoryId(categoryId: Int, callback: (List<Recipe>?) -> Unit) {
+        threadPoll.execute {
+            val result = try {
+                val call = api.getRecipesByCategoryId(categoryId)
+                val response = call.execute()
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    Log.e("!!!", "getRecipesByCategoryId HTTP ${response.code()}")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("!!!", "getRecipesByCategoryId exception $categoryId", e)
+                null
+            }
+            callback(result)
         }
     }
 
-    suspend fun getRecipeById(recipeId: Int): Recipe? {
-        return try {
-            val response = api.getRecipeById(recipeId)
-            Log.d("!!!", "getRecipeById($recipeId) failed: HTTP ${response}")
-            response
-        } catch (e: Exception) {
-            Log.d("!!!", "getRecipeById exception for $recipeId")
-            null
+    fun getRecipeById(recipeId: Int, callback: (Recipe?) -> Unit) {
+        threadPoll.execute {
+            val response = try {
+                val call = api.getRecipeById(recipeId)
+                val response = call.execute()
+                if (response.isSuccessful) {
+                    Log.d("!!!", "getRecipeById($recipeId) failed: HTTP ${response.body()}")
+                    response.body()
+                } else {
+                    Log.e("!!!", "getRecipeById HTTP ${response.code()}")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("!!!", "getRecipeById exception for $recipeId")
+                null
+            }
+            callback(response)
         }
     }
 
-    suspend fun getRecipesByIds(ids: Set<Int>): List<Recipe>? {
-        return try {
-            val idsParam = ids.joinToString(",")
-            val response = api.getRecipesByIds(idsParam)
-            Log.d("!!!", "getRecipesByIds($ids) failed: HTTP ${response}")
-            response
-        } catch (e: Exception) {
-            Log.d("!!!", "getRecipesByIds exception for $ids")
-            null
+    fun getRecipesByIds(ids: Set<Int>, callback: (List<Recipe>?) -> Unit) {
+
+        threadPoll.execute {
+            val response = try {
+                val idsParam = ids.joinToString(",")
+                val call = api.getRecipesByIds(idsParam)
+                val response = call.execute()
+                Log.d("!!!", "getRecipesByIds($ids) failed: HTTP ${response.code()}")
+                response.body()
+            } catch (e: Exception) {
+                Log.d("!!!", "getRecipesByIds exception for $ids")
+                null
+            }
+            callback(response)
         }
     }
 }

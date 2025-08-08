@@ -5,13 +5,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.model.Recipe
-import kotlinx.coroutines.launch
 
 data class FavoriteUiState(
     val recipes: List<Recipe> = emptyList(),
@@ -32,17 +30,15 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun loadFavorite() {
 
-        viewModelScope.launch {
-            val favoritesId: Set<Int> = appPreferences
-                .getFavorites()
-                .mapNotNull { it.toIntOrNull() }
-                .toSet()
+        val favoritesId: Set<Int> = appPreferences
+            .getFavorites()
+            .mapNotNull { it.toIntOrNull() }
+            .toSet()
 
-            val favoriteRecipes = repository.getRecipesByIds(favoritesId)
-
+        repository.getRecipesByIds(favoritesId) { favoriteRecipes ->
             if (favoriteRecipes == null) {
                 toastMessage.postValue(R.string.errorToast)
-                return@launch
+                return@getRecipesByIds
             }
 
             val newStateFavorite = FavoriteUiState(
@@ -51,7 +47,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
             )
 
             Log.i("!!!", "newStateFavorite - $newStateFavorite")
-            _state.value = newStateFavorite
+            _state.postValue(newStateFavorite)
         }
     }
 }

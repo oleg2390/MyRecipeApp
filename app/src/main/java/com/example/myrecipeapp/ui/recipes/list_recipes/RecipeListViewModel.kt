@@ -6,13 +6,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.model.Category
 import com.example.myrecipeapp.model.Recipe
-import kotlinx.coroutines.launch
 import java.io.IOException
 
 data class RecipeListUiState(
@@ -30,12 +28,11 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
     var toastMessage = SingleLiveEvent<Int>()
 
     fun loadRecipeList(category: Category) {
-        viewModelScope.launch {
-            val recipes = repository.getRecipesByCategoryId(category.id)
 
+        repository.getRecipesByCategoryId(category.id) { recipes ->
             if (recipes == null) {
                 toastMessage.postValue(R.string.errorToast)
-                return@launch
+                return@getRecipesByCategoryId
             }
 
             val drawable = try {
@@ -46,10 +43,12 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
                 null
             }
 
-            _state.value = RecipeListUiState(
-                recipes = recipes ?: emptyList(),
-                categoryName = category.title,
-                categoryImage = drawable
+            _state.postValue(
+                RecipeListUiState(
+                    recipes = recipes,
+                    categoryName = category.title,
+                    categoryImage = drawable
+                )
             )
         }
     }
