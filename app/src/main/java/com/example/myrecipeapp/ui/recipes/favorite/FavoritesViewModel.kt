@@ -50,4 +50,9 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
             _state.postValue(newStateFavorite)
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
+    }
 }

@@ -34,4 +34,9 @@ class CategoriesListViewModel : ViewModel() {
             }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
+    }
 }

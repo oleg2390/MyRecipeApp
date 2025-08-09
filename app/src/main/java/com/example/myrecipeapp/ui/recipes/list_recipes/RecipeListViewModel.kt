@@ -52,5 +52,10 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
             )
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
+    }
 }
 

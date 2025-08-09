@@ -93,4 +93,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val current = uiState.value ?: return
         _uiState.value = current.copy(portions = newPortion)
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
+    }
 }

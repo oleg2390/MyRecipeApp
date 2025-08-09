@@ -107,4 +107,8 @@ class RecipesRepository {
             callback(response)
         }
     }
+
+    fun shutdown() {
+        threadPoll.shutdown()
+    }
 }
