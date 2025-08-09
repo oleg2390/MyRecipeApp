@@ -7,8 +7,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.SingleLiveEvent
+import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.data.AppPreferences
-import com.example.myrecipeapp.data.STUB
 import com.example.myrecipeapp.model.Recipe
 import java.io.IOException
 
@@ -17,7 +18,6 @@ data class RecipeUiState(
     val isFavorites: Boolean = false,
     val portions: Int = 1,
     val recipeImage: Drawable? = null,
-    val toastMessageResId: Int? = null,
 )
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,36 +25,45 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val appPreferences = AppPreferences(application.applicationContext)
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
+    private val repository = RecipesRepository()
+
+    var toastMessage = SingleLiveEvent<Int>()
 
     init {
         Log.i("!!!", "ViewModel создан")
     }
 
     fun loadRecipe(id: Int) {
-        //TODO("load from network")
-        val recipe = STUB.getRecipeById(id)
+
         val isFavorites = appPreferences.getFavorites().contains(id.toString())
         val current = uiState.value ?: RecipeUiState()
 
-        val drawable = try {
-            val inputStream =
-                recipe?.imageUrl?.let { getApplication<Application>().assets.open(it) }
-            Drawable.createFromStream(inputStream, null)
-        } catch (e: IOException) {
-            val errorMsg =
-                getApplication<Application>().applicationContext.getString(R.string.image_upload_error_from_assets)
-            Log.e("image", errorMsg, e)
-            null
+        repository.getRecipeById(id) { recipe ->
+            if (recipe == null) {
+                toastMessage.postValue(R.string.errorToast)
+                return@getRecipeById
+            }
+
+            val drawable = try {
+                val inputStream =
+                    recipe.imageUrl.let { getApplication<Application>().assets.open(it) }
+                Drawable.createFromStream(inputStream, null)
+            } catch (e: IOException) {
+                val errorMsg =
+                    getApplication<Application>().applicationContext.getString(R.string.image_upload_error_from_assets)
+                Log.e("image", errorMsg, e)
+                null
+            }
+
+            val newState = current.copy(
+                recipe = recipe,
+                isFavorites = isFavorites,
+                portions = current.portions,
+                recipeImage = drawable,
+            )
+
+            _uiState.postValue(newState)
         }
-
-        val newState = current.copy(
-            recipe = recipe,
-            isFavorites = isFavorites,
-            portions = current.portions,
-            recipeImage = drawable,
-        )
-
-        _uiState.value = newState
     }
 
     fun onFavoritesClicked() {
@@ -76,10 +85,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         appPreferences.saveFavorites(favorites)
-        _uiState.value = current.copy(
-            isFavorites = isNowFavorite,
-            toastMessageResId = toastResId,
-        )
+        _uiState.value = current.copy(isFavorites = isNowFavorite)
+        toastMessage.setValue(toastResId)
     }
 
     fun onPortionsChanged(newPortion: Int) {
@@ -87,8 +94,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         _uiState.value = current.copy(portions = newPortion)
     }
 
-    fun clearToastMessage() {
-        val current = uiState.value ?: return
-        _uiState.value = current.copy(toastMessageResId = null)
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
     }
 }
