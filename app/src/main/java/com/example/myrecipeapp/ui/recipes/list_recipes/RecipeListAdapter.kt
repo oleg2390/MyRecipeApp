@@ -1,15 +1,12 @@
 package com.example.myrecipeapp.ui.recipes.list_recipes
 
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myrecipeapp.R
+import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.ItemRecipeBinding
 import com.example.myrecipeapp.model.Recipe
-import java.io.IOException
 
 class RecipeListAdapter(var dataset: List<Recipe> = emptyList()) :
     RecyclerView.Adapter<RecipeListAdapter.ViewHolder>() {
@@ -31,17 +28,11 @@ class RecipeListAdapter(var dataset: List<Recipe> = emptyList()) :
 
             binding.tvRecipeItemTittle.text = recipe.title
 
-            try {
-                val assetManager = binding.root.context.assets
-
-                assetManager.open(recipe.imageUrl).use { inputStream ->
-                    val drawableRecipe = Drawable.createFromStream(inputStream, null)
-                    binding.ivRecipeItemImage.setImageDrawable(drawableRecipe)
-                }
-            } catch (e: IOException) {
-                Log.d("data", "recipe image upload error from assets")
-                binding.ivRecipeItemImage.setImageResource(R.drawable.burger)
-            }
+            ImageLoader.loadImage(
+                binding.root.context,
+                recipe.imageUrl,
+                binding.ivRecipeItemImage
+            )
         }
     }
 

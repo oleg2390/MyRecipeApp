@@ -1,15 +1,12 @@
 package com.example.myrecipeapp.ui.categories
 
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myrecipeapp.R
+import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.ItemCategoryBinding
 import com.example.myrecipeapp.model.Category
-import java.io.IOException
 
 class CategoriesListAdapter(
     private var dataSet: List<Category> = emptyList(),
@@ -28,16 +25,11 @@ class CategoriesListAdapter(
             binding.tvItemTittle.text = category.title
             binding.tvItemDescription.text = category.description
 
-            try {
-                val assetManager = binding.root.context.assets
-                assetManager.open(category.imageUrl).use { inputStream ->
-                    val drawable = Drawable.createFromStream(inputStream, null)
-                    binding.ivItemImage.setImageDrawable(drawable)
-                }
-            } catch (e: IOException) {
-                Log.e("image", "image upload error from assets", e)
-                binding.ivItemImage.setImageResource(R.drawable.burger)
-            }
+            ImageLoader.loadImage(
+                binding.root.context,
+                category.imageUrl,
+                binding.ivItemImage
+            )
 
             binding.root.setOnClickListener {
                 onItemClick(category)
