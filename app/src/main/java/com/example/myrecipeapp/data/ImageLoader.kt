@@ -16,8 +16,8 @@ object ImageLoader {
         Glide.with(context)
             .load(fullUrl)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .placeholder(R.drawable.burger)
-            .error(R.drawable.burger)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
             .into(target)
     }
 }
