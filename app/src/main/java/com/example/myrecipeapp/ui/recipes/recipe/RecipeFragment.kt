@@ -53,6 +53,11 @@ class RecipeFragment : Fragment() {
         binding.rvMethod.addItemDecoration(getDivider())
 
         viewModel.loadRecipe(categoryId)
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+            Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
+        }
+
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             initUI(state)
         }
@@ -88,11 +93,6 @@ class RecipeFragment : Fragment() {
             binding.sbRecipeFragment.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
                 viewModel.onPortionsChanged(progress)
             })
-
-            state.toastMessageResId?.let {
-                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_SHORT).show()
-                viewModel.clearToastMessage()
-            }
 
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
                 viewModel.onFavoritesClicked()

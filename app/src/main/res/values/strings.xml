@@ -29,4 +29,5 @@
     <string name="empty_favorites">Вы еще не добавили ни одного рецепта в избранное</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="errorToast">\"Ошибка получения данных\"</string>
 </resources>
