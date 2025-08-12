@@ -17,7 +17,7 @@ data class RecipeUiState(
     val recipe: Recipe? = null,
     val isFavorites: Boolean = false,
     val portions: Int = 1,
-    val recipeImage: Drawable? = null,
+    val recipeImage: String? = null,
 )
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,22 +44,22 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 return@getRecipeById
             }
 
-            val drawable = try {
-                val inputStream =
-                    recipe.imageUrl.let { getApplication<Application>().assets.open(it) }
-                Drawable.createFromStream(inputStream, null)
-            } catch (e: IOException) {
-                val errorMsg =
-                    getApplication<Application>().applicationContext.getString(R.string.image_upload_error_from_assets)
-                Log.e("image", errorMsg, e)
-                null
-            }
+//            val drawable = try {
+//                val inputStream =
+//                    recipe.imageUrl.let { getApplication<Application>().assets.open(it) }
+//                Drawable.createFromStream(inputStream, null)
+//            } catch (e: IOException) {
+//                val errorMsg =
+//                    getApplication<Application>().applicationContext.getString(R.string.image_upload_error_from_assets)
+//                Log.e("image", errorMsg, e)
+//                null
+//            }
 
             val newState = current.copy(
                 recipe = recipe,
                 isFavorites = isFavorites,
                 portions = current.portions,
-                recipeImage = drawable,
+                recipeImage = recipe.imageUrl,
             )
 
             _uiState.postValue(newState)

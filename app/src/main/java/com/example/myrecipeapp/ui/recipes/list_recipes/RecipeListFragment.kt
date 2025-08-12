@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
 
 class RecipeListFragment : Fragment() {
@@ -53,8 +54,15 @@ class RecipeListFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.tvRecipes.text = state.categoryName
-            binding.ivHeaderRecipe.setImageDrawable(state.categoryImage)
             recipeListAdapter.updateAdapter(state.recipes)
+
+            state.categoryImage?.let { imageName ->
+                ImageLoader.loadImage(
+                    requireContext(),
+                    imageName,
+                    binding.ivHeaderRecipe
+                )
+            }
         }
     }
 

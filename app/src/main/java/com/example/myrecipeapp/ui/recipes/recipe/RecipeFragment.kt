@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
@@ -81,11 +82,12 @@ class RecipeFragment : Fragment() {
 
             methodAdapter.method = recipe.method
 
-            val stateImage = state.recipeImage
-            if (stateImage != null) {
-                binding.ivHeaderRecipeFragment.setImageDrawable(stateImage)
-            } else {
-                binding.ivHeaderRecipeFragment.setImageResource(R.drawable.burger)
+            state.recipeImage?.let { imageName ->
+                ImageLoader.loadImage(
+                    requireContext(),
+                    imageName,
+                    binding.ivHeaderRecipeFragment
+                )
             }
 
             updateFavoriteIcon(state.isFavorites)
