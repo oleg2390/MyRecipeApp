@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.model.Category
+import kotlinx.coroutines.launch
 
 data class CategoriesUiState(
     val categories: List<Category> = emptyList()
@@ -25,7 +27,8 @@ class CategoriesListViewModel : ViewModel() {
 
     private fun loadCategories() {
 
-        repository.getCategories { result ->
+        viewModelScope.launch {
+            val result = repository.getCategories()
             if (result == null) {
                 toastMessage.postValue(R.string.errorToast)
             } else {
@@ -33,10 +36,5 @@ class CategoriesListViewModel : ViewModel() {
                 _state.postValue(CategoriesUiState(result))
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        repository.shutdown()
     }
 }
