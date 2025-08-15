@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
-   // alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
 }
 
 android {
@@ -64,4 +64,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+
+    val room_version = "2.7.2"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 }
