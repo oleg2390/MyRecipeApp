@@ -4,7 +4,7 @@ plugins {
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
 }
 
 android {
@@ -68,5 +68,6 @@ dependencies {
     val room_version = "2.7.2"
 
     implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 }
