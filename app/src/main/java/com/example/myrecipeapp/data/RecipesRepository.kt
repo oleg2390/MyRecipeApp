@@ -15,6 +15,7 @@ import retrofit2.Retrofit
 class RecipesRepository {
 
     private val api: RecipeApiService
+    private val database = MyApp.database.categoriesDao()
 
     init {
 
@@ -37,7 +38,7 @@ class RecipesRepository {
         api = retrofit.create(RecipeApiService::class.java)
     }
 
-    suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
+    private suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
         try {
             val resultResponse = api.getCategories()
             Log.d("!!!", "Получены категории: $resultResponse")
@@ -83,5 +84,19 @@ class RecipesRepository {
             Log.d("!!!", "getRecipesByIds exception for $ids")
             null
         }
+    }
+
+    suspend fun getCategoriesFromCache(): List<Category> = withContext(Dispatchers.IO) {
+        database.getAllCategories()
+    }
+
+    suspend fun fetchAndSaveCategories(): Result<List<Category>> = runCatching {
+        val categories = getCategories() ?: emptyList()
+
+        if (categories.isNotEmpty()) {
+            database.insertCategory(categories)
+        }
+
+        categories
     }
 }

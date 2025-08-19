@@ -28,12 +28,26 @@ class CategoriesListViewModel : ViewModel() {
     private fun loadCategories() {
 
         viewModelScope.launch {
-            val result = repository.getCategories()
-            if (result == null) {
+
+            try {
+                val cachedCategory = repository.getCategoriesFromCache()
+                _state.postValue(CategoriesUiState(cachedCategory))
+
+                val result = repository.fetchAndSaveCategories()
+
+                result.fold(
+                    onSuccess = { networkCategories ->
+                        Log.i("!!!", "Категории загружены: - $networkCategories")
+                        _state.postValue(CategoriesUiState(networkCategories))
+                    },
+                    onFailure = { error ->
+                        Log.e("!!!", "Ошибка загрузки категорий: ${error.message}")
+                        toastMessage.postValue(R.string.errorToast)
+                    }
+                )
+            } catch (e: Exception) {
+                Log.e("!!!", "Ошибка при загрузке категорий: ${e.message}")
                 toastMessage.postValue(R.string.errorToast)
-            } else {
-                Log.i("!!!", "Категории загружены: - $result")
-                _state.postValue(CategoriesUiState(result))
             }
         }
     }
