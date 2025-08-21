@@ -15,7 +15,8 @@ import retrofit2.Retrofit
 class RecipesRepository {
 
     private val api: RecipeApiService
-    private val database = MyApp.database.categoriesDao()
+    private val databaseCategories = MyApp.database.categoriesDao()
+    private val databaseRecipe = MyApp.database.recipesDao()
 
     init {
 
@@ -49,6 +50,20 @@ class RecipesRepository {
         }
     }
 
+    suspend fun getCategoriesFromCache(): List<Category> = withContext(Dispatchers.IO) {
+        databaseCategories.getAllCategories()
+    }
+
+    suspend fun fetchAndSaveCategories(): Result<List<Category>> = runCatching {
+        val categories = getCategories() ?: emptyList()
+
+        if (categories.isNotEmpty()) {
+            databaseCategories.insertCategories(categories)
+        }
+
+        categories
+    }
+
     suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
@@ -61,7 +76,6 @@ class RecipesRepository {
             }
         }
 
-
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
             val response = api.getRecipeById(recipeId)
@@ -72,7 +86,6 @@ class RecipesRepository {
             null
         }
     }
-
 
     suspend fun getRecipesByIds(ids: Set<Int>): List<Recipe>? = withContext(Dispatchers.IO) {
         try {
@@ -86,17 +99,16 @@ class RecipesRepository {
         }
     }
 
-    suspend fun getCategoriesFromCache(): List<Category> = withContext(Dispatchers.IO) {
-        database.getAllCategories()
-    }
-
-    suspend fun fetchAndSaveCategories(): Result<List<Category>> = runCatching {
-        val categories = getCategories() ?: emptyList()
-
-        if (categories.isNotEmpty()) {
-            database.insertCategory(categories)
+    suspend fun getRecipeByCategoriesIdFromCash(): List<Recipe> =
+        withContext(Dispatchers.IO) {
+            databaseRecipe.getRecipesDb()
         }
 
-        categories
+    suspend fun fetchAndSaveRecipesByCategory(categoryId: Int): Result<List<Recipe>> = runCatching {
+        val recipes = getRecipesByCategoryId(categoryId) ?: emptyList()
+        if (recipes.isNotEmpty()) {
+            databaseRecipe.insertRecipe(recipes)
+        }
+        recipes
     }
 }

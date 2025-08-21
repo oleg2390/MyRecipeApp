@@ -26,14 +26,29 @@ class RecipeListViewModel() : ViewModel() {
     fun loadRecipeList(category: Category) {
 
         viewModelScope.launch {
-            val result = repository.getRecipesByCategoryId(category.id)
-            _state.postValue(
-                RecipeListUiState(
-                    recipes = result ?: emptyList(),
-                    categoryName = category.title,
-                    categoryImage = category.imageUrl
+            val cashedRecipes = repository.getRecipeByCategoriesIdFromCash()
+            if (cashedRecipes.isNotEmpty()) {
+                _state.postValue(
+                    RecipeListUiState(
+                        recipes = cashedRecipes,
+                        categoryName = category.title,
+                        categoryImage = category.imageUrl
+                    )
                 )
-            )
+            }
+
+            val result = repository.fetchAndSaveRecipesByCategory(category.id)
+            result.onSuccess { recipes ->
+                if (recipes.isNotEmpty()) {
+                    _state.postValue(
+                        RecipeListUiState(
+                            recipes = recipes,
+                            categoryName = category.title,
+                            categoryImage = category.imageUrl
+                        )
+                    )
+                }
+            }
         }
     }
 }
