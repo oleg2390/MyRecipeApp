@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
-import com.example.myrecipeapp.data.AppPreferences
 import com.example.myrecipeapp.model.Recipe
 import kotlinx.coroutines.launch
 
@@ -22,7 +21,6 @@ data class RecipeUiState(
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val appPreferences = AppPreferences(application.applicationContext)
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
     private val repository = RecipesRepository()
@@ -36,15 +34,16 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(id: Int) {
 
         viewModelScope.launch {
-            val isFavorites = appPreferences.getFavorites().contains(id.toString())
+            val recipe = repository.getRecipeByIdFromDb(id)
             val current = uiState.value ?: RecipeUiState()
-            val recipe = repository.getRecipeById(id)
+
+            if (recipe == null) return@launch
 
             val newState = current.copy(
                 recipe = recipe,
-                isFavorites = isFavorites,
+                isFavorites = recipe.isFavorite,
                 portions = current.portions,
-                recipeImage = recipe?.imageUrl,
+                recipeImage = recipe.imageUrl,
             )
 
             _uiState.postValue(newState)
@@ -54,24 +53,19 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun onFavoritesClicked() {
 
         val current = uiState.value ?: return
-        val recipeId = current.recipe?.id.toString()
-        val favorites = appPreferences.getFavorites().toMutableSet()
-        val isNowFavorite: Boolean
-        val toastResId: Int
+        val recipe = current.recipe ?: return
 
-        if (favorites.contains(recipeId)) {
-            favorites.remove(recipeId)
-            isNowFavorite = false
-            toastResId = R.string.remove_favorite
-        } else {
-            favorites.add(recipeId)
-            isNowFavorite = true
-            toastResId = R.string.add_favorite
+        viewModelScope.launch {
+            val isNowFavorites = !recipe.isFavorite
+            repository.updateFavorite(recipe.id, isNowFavorites)
+            _uiState.postValue(current.copy(recipe = recipe.copy(isFavorite = isNowFavorites)))
+
+            val toastResId = if (isNowFavorites) {
+                R.string.add_favorite
+            } else R.string.remove_favorite
+
+            toastMessage.postValue(toastResId)
         }
-
-        appPreferences.saveFavorites(favorites)
-        _uiState.value = current.copy(isFavorites = isNowFavorite)
-        toastMessage.setValue(toastResId)
     }
 
     fun onPortionsChanged(newPortion: Int) {

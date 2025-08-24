@@ -64,7 +64,7 @@ class RecipesRepository {
         categories
     }
 
-    suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
+    private suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
                 val response = api.getRecipesByCategoryId(categoryId)
@@ -75,29 +75,6 @@ class RecipesRepository {
                 null
             }
         }
-
-    suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
-        try {
-            val response = api.getRecipeById(recipeId)
-            Log.d("!!!", "getRecipeById($recipeId) failed: HTTP $response")
-            response
-        } catch (e: Exception) {
-            Log.d("!!!", "getRecipeById exception for $recipeId")
-            null
-        }
-    }
-
-    suspend fun getRecipesByIds(ids: Set<Int>): List<Recipe>? = withContext(Dispatchers.IO) {
-        try {
-            val idsParam = ids.joinToString(",")
-            val response = api.getRecipesByIds(idsParam)
-            Log.d("!!!", "getRecipesByIds($ids) failed: HTTP $response")
-            response
-        } catch (e: Exception) {
-            Log.d("!!!", "getRecipesByIds exception for $ids")
-            null
-        }
-    }
 
     suspend fun getRecipeByCategoriesIdFromCash(): List<Recipe> =
         withContext(Dispatchers.IO) {
@@ -110,5 +87,16 @@ class RecipesRepository {
             databaseRecipe.insertRecipe(recipes)
         }
         recipes
+    }
+
+    suspend fun getFavoriteRecipe(): List<Recipe> =
+        databaseRecipe.getFavoriteRecipe()
+
+    suspend fun updateFavorite(recipeId: Int, isFavorite: Boolean) {
+        databaseRecipe.updateFavorite(recipeId, isFavorite)
+    }
+
+    suspend fun getRecipeByIdFromDb(id: Int): Recipe? = withContext(Dispatchers.IO) {
+        databaseRecipe.getRecipeById(id)
     }
 }
