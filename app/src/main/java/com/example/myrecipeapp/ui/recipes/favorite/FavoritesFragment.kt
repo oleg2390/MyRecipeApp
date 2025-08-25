@@ -6,19 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myrecipeapp.RecipeApplication
 import com.example.myrecipeapp.ui.recipes.list_recipes.RecipeListAdapter
 import com.example.myrecipeapp.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment() : Fragment() {
 
     private var recipeListAdapter = RecipeListAdapter()
-    private val viewModel: FavoritesViewModel by viewModels()
+    private lateinit var favoritesViewModel: FavoritesViewModel
     private var _binding: FragmentFavoritesBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("FragmentFavoritesBinding must not be null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipeApplication).appContainer
+        favoritesViewModel = appContainer.favoritesViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,11 +49,11 @@ class FavoritesFragment() : Fragment() {
             }
         })
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+        favoritesViewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
             Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+        favoritesViewModel.state.observe(viewLifecycleOwner) { state ->
             initRecycle(state)
         }
     }

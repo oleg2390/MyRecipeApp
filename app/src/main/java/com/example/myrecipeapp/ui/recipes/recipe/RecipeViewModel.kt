@@ -1,10 +1,9 @@
 package com.example.myrecipeapp.ui.recipes.recipe
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
@@ -19,12 +18,12 @@ data class RecipeUiState(
     val recipeImage: String? = null,
 )
 
-class RecipeViewModel(application: Application) : AndroidViewModel(application) {
+class RecipeViewModel(
+    private val recipesRepository: RecipesRepository
+) : ViewModel() {
 
     private val _uiState = MutableLiveData<RecipeUiState>()
     val uiState: LiveData<RecipeUiState> = _uiState
-    private val repository = RecipesRepository()
-
     var toastMessage = SingleLiveEvent<Int>()
 
     init {
@@ -34,7 +33,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(id: Int) {
 
         viewModelScope.launch {
-            val recipe = repository.getRecipeByIdFromDb(id)
+            val recipe = recipesRepository.getRecipeByIdFromDb(id)
             val current = uiState.value ?: RecipeUiState()
 
             if (recipe == null) return@launch
@@ -57,7 +56,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
         viewModelScope.launch {
             val isNowFavorites = !recipe.isFavorite
-            repository.updateFavorite(recipe.id, isNowFavorites)
+            recipesRepository.updateFavorite(recipe.id, isNowFavorites)
             _uiState.postValue(current.copy(recipe = recipe.copy(isFavorite = isNowFavorites)))
 
             val toastResId = if (isNowFavorites) {
