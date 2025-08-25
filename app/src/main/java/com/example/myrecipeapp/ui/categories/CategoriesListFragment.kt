@@ -6,18 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.myrecipeapp.RecipeApplication
 import com.example.myrecipeapp.databinding.FragmentListCategoriesBinding
 import com.example.myrecipeapp.model.Category
 
 class CategoriesListFragment : Fragment() {
 
-    private val viewModel: CategoriesListViewModel by viewModels()
+    private lateinit var categoriesListViewModel: CategoriesListViewModel
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
         get() = _binding
             ?: throw IllegalStateException("FragmentListCategoriesBinding must not be null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipeApplication).appContainer
+        categoriesListViewModel = appContainer.categoriesListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,11 +43,11 @@ class CategoriesListFragment : Fragment() {
         }
         binding.rvCategories.adapter = adapter
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+        categoriesListViewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
             Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+        categoriesListViewModel.state.observe(viewLifecycleOwner) { state ->
             adapter.updateAdapter(state.categories)
         }
     }
@@ -52,8 +59,9 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(category: Category) {
 
-        val foundCategory = viewModel.state.value?.categories?.find { it.id == category.id }
-            ?: throw IllegalArgumentException("Category id = ${category.id} not found")
+        val foundCategory =
+            categoriesListViewModel.state.value?.categories?.find { it.id == category.id }
+                ?: throw IllegalArgumentException("Category id = ${category.id} not found")
 
         val action =
             CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipeListFragment(
