@@ -16,17 +16,18 @@ data class RecipeListUiState(
     val categoryImage: String? = null,
 )
 
-class RecipeListViewModel() : ViewModel() {
+class RecipeListViewModel(
+    private val recipesRepository: RecipesRepository
+) : ViewModel() {
 
     private val _state = MutableLiveData<RecipeListUiState>()
     val state: LiveData<RecipeListUiState> = _state
-    private val repository = RecipesRepository()
     var toastMessage = SingleLiveEvent<Int>()
 
     fun loadRecipeList(category: Category) {
 
         viewModelScope.launch {
-            val cashedRecipes = repository.getRecipeByCategoriesIdFromCash()
+            val cashedRecipes = recipesRepository.getRecipeByCategoriesIdFromCash()
             if (cashedRecipes.isNotEmpty()) {
                 _state.postValue(
                     RecipeListUiState(
@@ -37,7 +38,7 @@ class RecipeListViewModel() : ViewModel() {
                 )
             }
 
-            val result = repository.fetchAndSaveRecipesByCategory(category.id)
+            val result = recipesRepository.fetchAndSaveRecipesByCategory(category.id)
             result.onSuccess { recipes ->
                 if (recipes.isNotEmpty()) {
                     _state.postValue(

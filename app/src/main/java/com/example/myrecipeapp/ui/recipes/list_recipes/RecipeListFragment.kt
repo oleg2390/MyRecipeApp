@@ -6,22 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myrecipeapp.RecipeApplication
 import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
 
 class RecipeListFragment : Fragment() {
 
     private var recipeListAdapter = RecipeListAdapter()
-    private val viewModel: RecipeListViewModel by viewModels()
+    private lateinit var recipeListViewModel: RecipeListViewModel
     private var _binding: FragmentListRecipesBinding? = null
 
     private val binding
         get() = _binding
             ?: throw IllegalStateException("RecipesListFragmentBinding must not be null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipeApplication).appContainer
+        recipeListViewModel = appContainer.recipeListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +44,7 @@ class RecipeListFragment : Fragment() {
 
         val args: RecipeListFragmentArgs by navArgs()
         val category = args.category
-        viewModel.loadRecipeList(category)
+        recipeListViewModel.loadRecipeList(category)
 
         binding.rvRecipeContainer.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecipeContainer.adapter = recipeListAdapter
@@ -48,11 +55,11 @@ class RecipeListFragment : Fragment() {
             }
         })
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+        recipeListViewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
             Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+        recipeListViewModel.state.observe(viewLifecycleOwner) { state ->
             binding.tvRecipes.text = state.categoryName
             recipeListAdapter.updateAdapter(state.recipes)
 

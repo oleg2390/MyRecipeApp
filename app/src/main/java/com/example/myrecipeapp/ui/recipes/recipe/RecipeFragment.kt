@@ -11,10 +11,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.R
+import com.example.myrecipeapp.RecipeApplication
 import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -23,11 +23,18 @@ class RecipeFragment : Fragment() {
 
     private var ingredientsAdapter = IngredientsAdapter()
     private var methodAdapter = MethodAdapter()
-    private val viewModel: RecipeViewModel by viewModels()
+    private lateinit var recipeViewModel: RecipeViewModel
     private var _binding: FragmentRecipesBinding? = null
     private val binding
         get() = _binding
             ?: throw IllegalStateException("RecipeFragmentBinding must not be null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipeApplication).appContainer
+        recipeViewModel = appContainer.recipeViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,13 +60,13 @@ class RecipeFragment : Fragment() {
         binding.rvIngredients.addItemDecoration(getDivider())
         binding.rvMethod.addItemDecoration(getDivider())
 
-        viewModel.loadRecipe(categoryId)
+        recipeViewModel.loadRecipe(categoryId)
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+        recipeViewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
             Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+        recipeViewModel.uiState.observe(viewLifecycleOwner) { state ->
             initUI(state)
         }
     }
@@ -93,11 +100,11 @@ class RecipeFragment : Fragment() {
             updateFavoriteIcon(state.isFavorites)
 
             binding.sbRecipeFragment.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
-                viewModel.onPortionsChanged(progress)
+                recipeViewModel.onPortionsChanged(progress)
             })
 
             binding.ibRecipeFragmentFavoriteButton.setOnClickListener {
-                viewModel.onFavoritesClicked()
+                recipeViewModel.onFavoritesClicked()
             }
         }
     }

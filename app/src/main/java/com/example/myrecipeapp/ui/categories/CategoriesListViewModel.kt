@@ -15,10 +15,11 @@ data class CategoriesUiState(
     val categories: List<Category> = emptyList()
 )
 
-class CategoriesListViewModel : ViewModel() {
+class CategoriesListViewModel(
+    private val recipesRepository: RecipesRepository
+) : ViewModel() {
     private val _state = MutableLiveData<CategoriesUiState>()
     val state: LiveData<CategoriesUiState> = _state
-    private val repository = RecipesRepository()
     var toastMessage = SingleLiveEvent<Int>()
 
     init {
@@ -30,10 +31,10 @@ class CategoriesListViewModel : ViewModel() {
         viewModelScope.launch {
 
             try {
-                val cachedCategory = repository.getCategoriesFromCache()
+                val cachedCategory = recipesRepository.getCategoriesFromCache()
                 _state.postValue(CategoriesUiState(cachedCategory))
 
-                val result = repository.fetchAndSaveCategories()
+                val result = recipesRepository.fetchAndSaveCategories()
 
                 result.fold(
                     onSuccess = { networkCategories ->
