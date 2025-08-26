@@ -6,15 +6,17 @@ import com.example.myrecipeapp.model.Recipe
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val recipesDao: RecipesDao,
     private val categoriesDao: CategoriesDao,
     private val recipeApiService: RecipeApiService,
-    private val ioDispatcher: CoroutineDispatcher,
 ) {
 
-    private suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
+    private suspend fun getCategories(): List<Category>? = withContext(ioDispatcher) {
         try {
             val resultResponse = recipeApiService.getCategories()
             Log.d("!!!", "Получены категории: $resultResponse")
@@ -25,7 +27,7 @@ class RecipesRepository(
         }
     }
 
-    suspend fun getCategoriesFromCache(): List<Category> = withContext(Dispatchers.IO) {
+    suspend fun getCategoriesFromCache(): List<Category> = withContext(ioDispatcher) {
         categoriesDao.getAllCategories()
     }
 
@@ -40,7 +42,7 @@ class RecipesRepository(
     }
 
     private suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             try {
                 val response = recipeApiService.getRecipesByCategoryId(categoryId)
                 Log.e("!!!", "getRecipesByCategoryId HTTP $response")
@@ -52,7 +54,7 @@ class RecipesRepository(
         }
 
     suspend fun getRecipeByCategoriesIdFromCash(): List<Recipe> =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             recipesDao.getRecipesDb()
         }
 
@@ -71,7 +73,7 @@ class RecipesRepository(
         recipesDao.updateFavorite(recipeId, isFavorite)
     }
 
-    suspend fun getRecipeByIdFromDb(id: Int): Recipe? = withContext(Dispatchers.IO) {
+    suspend fun getRecipeByIdFromDb(id: Int): Recipe? = withContext(ioDispatcher) {
         recipesDao.getRecipeById(id)
     }
 }

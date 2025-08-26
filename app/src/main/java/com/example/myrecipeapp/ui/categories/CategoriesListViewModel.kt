@@ -9,13 +9,16 @@ import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.model.Category
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class CategoriesUiState(
     val categories: List<Category> = emptyList()
 )
 
-class CategoriesListViewModel(
+@HiltViewModel
+class CategoriesListViewModel @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) : ViewModel() {
     private val _state = MutableLiveData<CategoriesUiState>()

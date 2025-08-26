@@ -9,7 +9,9 @@ import com.example.myrecipeapp.R
 import com.example.myrecipeapp.SingleLiveEvent
 import com.example.myrecipeapp.data.RecipesRepository
 import com.example.myrecipeapp.model.Recipe
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class RecipeUiState(
     val recipe: Recipe? = null,
@@ -18,7 +20,8 @@ data class RecipeUiState(
     val recipeImage: String? = null,
 )
 
-class RecipeViewModel(
+@HiltViewModel
+class RecipeViewModel @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) : ViewModel() {
 
