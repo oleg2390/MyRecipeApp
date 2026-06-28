@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MyRecipeApp</string>
+    <string name="title_categories">категории</string>
+    <string name="title_favourites">избранное</string>
+    <string name="text_burgers">бургеры</string>
+    <string name="text_item_description">Рецепты всех популярных видов бургеров</string>
+    <string name="header_category">заголовок категории</string>
+    <string name="image_item">image_item</string>
+    <string name="title_recipes">рецепты</string>
+    <string name="title_burgers">бургеры</string>
+    <string name="header_recipes">заголовок рецептов</string>
+    <string name="header_recipe">заголовок рецепта</string>
+    <string name="default_string_quantity">6</string>
+    <string name="default_string_unit_of_measure">г</string>
+    <string name="default_string_name">творог</string>
+    <string name="ingredients">ингредиенты</string>
+    <string name="cooking_method">способ приготовления</string>
+    <string name="fragment_favorites">fragment_favorites</string>
+    <string name="portions">Порции:</string>
+    <string name="number_1">1</string>
+    <string name="add_favorite_icon">addFaforiteIcon</string>
+    <string name="add_favorite">Добавлено в избранное</string>
+    <string name="remove_favorite">Удаленно из избранного</string>
+    <string name="favorite">favorite</string>
+    <string name="favorites">избранное</string>
+    <string name="favorite_recipe">favorite_recipe</string>
+    <string name="image_upload_error_from_assets">image upload error from assets</string>
+    <string name="text_recipe_error">text recipe error</string>
+    <string name="empty_favorites">Вы еще не добавили ни одного рецепта в избранное</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="errorToast">\"Ошибка получения данных\"</string>
+</resources>

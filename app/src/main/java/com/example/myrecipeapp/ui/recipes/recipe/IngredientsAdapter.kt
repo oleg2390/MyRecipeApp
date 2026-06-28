@@ -1,0 +1,54 @@
+package com.example.myrecipeapp.ui.recipes.recipe
+
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.myrecipeapp.databinding.ItemIngredientBinding
+import com.example.myrecipeapp.model.Ingredient
+import java.math.RoundingMode
+
+class IngredientsAdapter(var ingredients: List<Ingredient> = emptyList()) :
+    RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
+
+    var quantity = 1
+
+    inner class ViewHolder(private val binding: ItemIngredientBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(ingredient: Ingredient) {
+
+            val displayQuantity = ingredient.quantity
+                .toBigDecimal()
+                .multiply(quantity.toBigDecimal())
+                .setScale(1, RoundingMode.HALF_UP)
+                .stripTrailingZeros()
+                .toPlainString()
+
+            binding.tvItemIngredientDescription.text = ingredient.description.uppercase()
+            binding.tvItemIngredientQuantity.text =
+                "${displayQuantity.uppercase()} ${ingredient.unitOfMeasure.uppercase()}"
+        }
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemIngredientBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(ingredients[position])
+    }
+
+    override fun getItemCount() = ingredients.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateIngredients(progress: Int) {
+        quantity = progress
+        notifyDataSetChanged()
+    }
+}

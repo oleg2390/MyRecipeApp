@@ -1,0 +1,85 @@
+package com.example.myrecipeapp.ui.recipes.list_recipes
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myrecipeapp.RecipeApplication
+import com.example.myrecipeapp.data.ImageLoader
+import com.example.myrecipeapp.databinding.FragmentListRecipesBinding
+
+class RecipeListFragment : Fragment() {
+
+    private var recipeListAdapter = RecipeListAdapter()
+    private lateinit var recipeListViewModel: RecipeListViewModel
+    private var _binding: FragmentListRecipesBinding? = null
+
+    private val binding
+        get() = _binding
+            ?: throw IllegalStateException("RecipesListFragmentBinding must not be null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipeApplication).appContainer
+        recipeListViewModel = appContainer.recipeListViewModelFactory.create()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentListRecipesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val args: RecipeListFragmentArgs by navArgs()
+        val category = args.category
+        recipeListViewModel.loadRecipeList(category)
+
+        binding.rvRecipeContainer.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvRecipeContainer.adapter = recipeListAdapter
+        recipeListAdapter.setOnItemClickListenerRecipe(object :
+            RecipeListAdapter.OnItemClickListener {
+            override fun onItemClick(recipeId: Int) {
+                openRecipeByRecipeId(recipeId)
+            }
+        })
+
+        recipeListViewModel.toastMessage.observe(viewLifecycleOwner) { resId ->
+            Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
+        }
+
+        recipeListViewModel.state.observe(viewLifecycleOwner) { state ->
+            binding.tvRecipes.text = state.categoryName
+            recipeListAdapter.updateAdapter(state.recipes)
+
+            state.categoryImage?.let { imageName ->
+                ImageLoader.loadImage(
+                    requireContext(),
+                    imageName,
+                    binding.ivHeaderRecipe
+                )
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    fun openRecipeByRecipeId(recipeId: Int) {
+        val action = RecipeListFragmentDirections.actionRecipeListFragmentToRecipeFragment(recipeId)
+        findNavController().navigate(action)
+    }
+}

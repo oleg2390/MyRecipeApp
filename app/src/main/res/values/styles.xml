@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Text.StyleTitle14" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/dimens_text_14sp</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/white_color</item>
+    </style>
+
+    <style name="Button.StyleNavButton" parent="Widget.Material3.Button">
+        <item name="android:textAppearance">@style/Text.StyleTitle14</item>
+        <item name="cornerRadius">@dimen/dimens_8dp</item>
+    </style>
+
+    <style name="Text.StyleTitle16" parent="TextAppearance.AppCompat">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_title_color</item>
+        <item name="android:textSize">@dimen/dimens_20sp</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+    </style>
+
+    <style name="Text.StyleItemTittle" parent="TextAppearance.AppCompat">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_title_color</item>
+        <item name="android:textSize">@dimen/dimens_text_14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+    </style>
+
+    <style name="Text.StyleItemDescription" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/description_item_666666_color</item>
+        <item name="android:textSize">@dimen/dimens_text_12sp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="Text.StyleItem14" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/dimens_text_14sp</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+    </style>
+
+    <style name="styleSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:thumb">@drawable/shape_seekbar_thumb</item>
+        <item name="android:progressDrawable">@drawable/shape_seekbar_progress</item>
+    </style>
+
+    <style name="Text.StyleTv16" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/dimens_16sp</item>
+        <item name="fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/description_item_666666_color</item>
+    </style>
+
+</resources>
