@@ -4,7 +4,8 @@ plugins {
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -70,4 +71,8 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+
+    val hiltVersion = "2.56.2"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
 }

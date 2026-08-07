@@ -11,30 +11,25 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myrecipeapp.R
-import com.example.myrecipeapp.RecipeApplication
 import com.example.myrecipeapp.data.ImageLoader
 import com.example.myrecipeapp.databinding.FragmentRecipesBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecipeFragment : Fragment() {
 
     private var ingredientsAdapter = IngredientsAdapter()
     private var methodAdapter = MethodAdapter()
-    private lateinit var recipeViewModel: RecipeViewModel
+    private val recipeViewModel: RecipeViewModel by viewModels()
     private var _binding: FragmentRecipesBinding? = null
     private val binding
         get() = _binding
             ?: throw IllegalStateException("RecipeFragmentBinding must not be null")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val appContainer = (requireActivity().application as RecipeApplication).appContainer
-        recipeViewModel = appContainer.recipeViewModelFactory.create()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
